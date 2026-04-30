@@ -1,12 +1,12 @@
 # Inscryption
 
-On souhaite développer une application imitant  **le jeu Inscryption**.
+On souhaite développer une application imitant **le jeu Inscryption**.
 
-_Vous vous retrouvez dans une cabane, perdu en pleine forêt. Dans l'obscurité, attablé face à vous  se dresse un adversaire aux yeux inquiétants qui vous défie à un étrange jeu de cartes..._ 
+_Vous vous retrouvez dans une cabane, perdu en pleine forêt. Dans l'obscurité, attablé face à vous se dresse un adversaire aux yeux inquiétants qui vous défie à un étrange jeu de cartes..._ 
 
-## Le jeu de cartes
+## Le jeu de cartes (Phase 1)
 - A votre gauche, se trouve une balance symbolisant l'écart de score avec votre adversaire. Le premier joueur qui atteint un écart de 5 points en sa faveur remporte la partie. 
-- Face à vous, se trouve un plateau constitué de deux lignes de quatres emplacements de cartes. Vous ne pouvez placer des cartes que sur la ligne du bas, votre adversaire uniquement sur la ligne du haut.
+- Face à vous, se trouve un plateau constitué de deux lignes de quatre emplacements de cartes. Vous ne pouvez placer des cartes que sur la ligne du bas, votre adversaire uniquement sur la ligne du haut.
 - A votre droite, vous disposez d'une pioche. Vous commencez avec 4 cartes en mains et vous pouvez piocher une carte par tour.
 
 ### Les cartes animaux
@@ -14,31 +14,37 @@ _Vous vous retrouvez dans une cabane, perdu en pleine forêt. Dans l'obscurité,
   - d'un nombre de points d'attaque
   - d'un nombre de points de vie,
   - d'un nombre de vos cartes à sacrifier pour pouvoir être placée sur le plateau (nombre de gouttes de sang)
-  - d'un nombre de vos cartes déjà mortes pour pouvoir être placée sur le plateau (nombre d'os)
+  - d'un nombre de vos cartes déjà mortes (tuées ou sacrifiées) pour pouvoir être placée sur le plateau (nombre d'os)
 
 Chacune des cartes peut apparaitre en plusieurs exemplaires dans la pioche, dans la main et sur le plateau.
 
 ### Déroulement d'un tour
 - Au début de votre tour, votre adversaire indique quelles cartes il jouera au tour prochain (représentés par une ligne supplémentaire de 4 emplacements de cartes  au-dessus du plateau)
-- A chaque tour, vous pouvez piochez une seule carte que vous placez dans votre main,
+- A chaque tour, vous pouvez piocher une seule carte que vous placez dans votre main,
 - Vous pouvez placer autant de cartes de votre par tour sur le plateau, dans la limite du nombre d'emplacements de cartes disponibles sur votre côté du plateau (au maximum 4) et en respectant les sacrifices à réaliser
 - A la fin de votre tour, chacune de vos cartes "animal" attaque. Si une carte de votre adversaire fait face à la carte attaquante, la carte de votre adversaire perd en nombre de points de vie le nombre de points d'attaque de votre carte. 
 Si au contraire, aucune carte de votre adversaire ne se trouve face à une de vos cartes, le score est augmenté en votre faveur du nombre de points d'attaque de votre carte.
-Les cartes "animal" volantes attaque directement le score même si une carte adverse se trouve en face d'elle.
+Les cartes "animal" volantes attaquent directement le score même si une carte adverse se trouve en face d'elle.
 
-Après votre tour, votre adversaire joue de la  même façon que vous (à la seule différence que vous n'avez pas à indiquer les cartes que vous jouerez au prochain tour).
+Un message devra indiquer les dégâts infligés par les attaques à la fin du tour. 
+
+Après votre tour, votre adversaire joue de la même façon que vous (à la seule différence que vous n'avez pas à indiquer les cartes que vous jouerez au prochain tour).
 
 
 ### Déroulement de la partie
-- Des cartes obstacles peuvent être présentes sur le plateau au début de la partie. Elles occupent chacune un emplacement de carte, possèdent un certain nombre de points de vie et doivent être éliminées avant de placer une carte à leur emplacement.
+- Au début de la partie le joueur, prend en main les 4 premières cartes de la pioche.
+- Des cartes obstacles peuvent être présentes sur le plateau au début de la partie. Elles occupent chacune un emplacement de carte, possèdent un certain nombre de points de vie et doivent être éliminées par vous ou votre adversaire avant de placer une carte à leur emplacement.
 - La partie se termine lorsqu'un déséquilibre de 5 points apparaît dans le score.
 
 
 ### Déroulement du jeu
-Le jeu est constitué de trois parties. Vous gagnez si vous remportez les trois parties.
-A la fin de la deuxième partie, vous pouvez ajouter à votre pioche une nouvelle carte parmi deux cartes proposées.
+- Au début de la partie le joueur commence avec une pioche de 15 cartes constituée majoritairement d'écureuils.
+- Le jeu est constitué de trois parties. Vous gagnez si vous remportez les trois parties.
+- A la fin de la deuxième partie, vous pouvez ajouter à votre pioche une nouvelle carte parmi deux cartes proposées.
 
-
+### Gestion de l'adversaire
+C'est votre application qui jouera pour l'adversaire du joueur. Ses actions peuvent être déterminées entièrement à l'avance.
+En revanche, évitez les stratégies aléatoires, cela risque de complexifier le debuggage et les tests de votre application.
 
 ### Liste des cartes animaux
 
@@ -63,39 +69,43 @@ Sapin | 3  |
 
 ## Proposition d'affichage
 ```
+    Partie 1
+
     1er Tour:
 
-    *-----------*   *************   *-----------*   *************
-    | Louveteau |   *           *   | Moineau   |   *           *
-    |-----------|   *           *   |-----------|   *           *
-    | PV: 1     |   *           *   | PV: 1     |   *           *
-    | Att: 1    |   *           *   | Att : 1   |   *           *
-    |           |   *           *   | Volant    |   *           *
-    *___________*   *************   *___________*   *************
-         ||              ||              ||              ||
-         \/              \/              \/              \/
-    *************   *************   *************   *************     
-    *           *   *           *   *           *   *           *
-    *           *   *           *   *           *   *           *
-    *     A1    *   *     A2    *   *     A3    *   *     A4    *
-    *           *   *           *   *           *   *           *
-    *           *   *           *   *           *   *           *
-    *************   *************   *************   *************
-
-    *************   *-----------*   *************   *************     
-    *           *   | Rocher    |   *           *   *           *
-    *           *   |-----------|   *           *   *           *
-    *     B1    *   | PV: 5     |   *    B3     *   *     B4    *
-    *           *   |           |   *           *   *           *
-    *           *   |           |   *           *   *           *
-    *************   *-----------*   *************   *************
-
-  Votre main : 
-    1. Ecureuil   PV: 1     Att: 0    Gouttes de sang: 0  Os : 0 
-    2. Ecureuil   PV: 1     Att: 0    Gouttes de sang: 0  Os : 0
-    3. Hermine    PV: 3     Att: 1    Gouttes de sang: 1  Os : 0
-    4. Ecureuil   PV: 1     Att: 0    Gouttes de sang: 0  Os : 0
-
+         *-----------*   *************   *-----------*   *************
+         | Louveteau |   *           *   | Moineau   |   *           *
+         |-----------|   *           *   |-----------|   *           *
+         | PV: 1     |   *           *   | PV: 1     |   *           *
+         | Att: 1    |   *           *   | Att : 1   |   *           *
+         |           |   *           *   | Volant    |   *           *
+         *-----------*   *************   *-----------*   *************
+               ||              ||              ||              ||
+               \/              \/              \/              \/
+         *************   *************   *************   *************     
+         *           *   *           *   *           *   *           *
+         *           *   *           *   *           *   *           *
+         *     A1    *   *     A2    *   *     A3    *   *     A4    *
+         *           *   *           *   *           *   *           *
+         *           *   *           *   *           *   *           *
+ Score   *************   *************   *************   *************
+   0
+         *************   *-----------*   *************   *************     
+         *           *   | Rocher    |   *           *   *           *
+         *           *   |-----------|   *           *   *           *
+         *     B1    *   | PV: 5     |   *    B3     *   *     B4    *
+         *           *   |           |   *           *   *           *
+         *           *   |           |   *           *   *           *
+         *************   *-----------*   *************   *************
+                                                                              Pioche
+  Votre main :                                                             *-----------* 
+    1. Ecureuil   PV: 1     Att: 0    Gouttes de sang: 0  Os : 0           |           |
+    2. Ecureuil   PV: 1     Att: 0    Gouttes de sang: 0  Os : 0           |           |
+    3. Hermine    PV: 3     Att: 1    Gouttes de sang: 1  Os : 0           |     11    |
+    4. Ecureuil   PV: 1     Att: 0    Gouttes de sang: 0  Os : 0           |   cartes  |
+                                                                           |           |
+                                                                           *-----------*
+    
 Actions possibles: 
   [fin] Terminer votre tour
   [piocher] Piocher une carte
@@ -121,7 +131,7 @@ Il n'est pas nécessaire de reproduire le visuel tel quel mais toutes les inform
 
 ## Calendrier
 - Lundi **4 mai** : phase 1 dévoilée
-- Lundi **11 mai** : début du projet en TP
+- Mardi **12 mai** : début des séances de TPs dédiées au projet
 - Lundi **25 mai** : début de la phase 2
 - Mercredi **10 Juin** à 12h30 : rendu final
 - De Jeudi **11 Juin** à Vendredi **12 Juin** : soutenances
@@ -145,8 +155,7 @@ Chaque rendu doit contenir :
 - un diagramme de classes à jour placé dans le répertoire `uml/` ayant pour nom `semaine<numero>.puml`,
 
 La structure du dépôt git doit être la suivante :
-```bash
-.
+```
 ├── README.md
 ├── .gitignore
 ├── deps/
@@ -169,12 +178,15 @@ La structure du dépôt git doit être la suivante :
 
 ### Les tests
 Afin de démontrer le bon fonctionnement de votre application, vous devrez écrire des tests.
-Vous testerez en particulier: 
+Vous testerez en particulier : 
 - l'attaque d'une carte,
+- l'attaque des toutes les cartes à la fin d'un tour,
+- la mise à jour du score,
 - le placement des cartes sur le plateau
 - le fait de piocher une carte,
 - la mise en place d'une partie (plateau et pioches)
 - le fait de gagner ou perdre une partie
+- l'ajout de nouvelles cartes dans la pioche à la fin de la deuxième partie
 - le fait de gagner ou perdre le jeu
 
 ### Gestion des erreurs
@@ -192,7 +204,7 @@ Veillez :
 ## Quelques conseils
 
 - N'essayez pas d'implémenter toutes les fonctionnalités en une seule fois. Commencez par un programme simple mais fonctionnel et intégrez progressivement les fonctionnalités.
-- Il s'agit d'une version très simplifiée d'Inscryption. Il peut être tentant d'améliorer le projet et d'intégrer beaucoup de fonctionnalités et d'y cacher des énigmes. Cependant cela ne vous permettra pas d'augmenter votre note. Ne négligez pas le projet de base ni les projets des autres modules. Vous aurez tout le loisir d'améliorer le projet durant votre été.
+- Il s'agit d'une version très simplifiée d'Inscryption. Il peut être tentant d'améliorer le projet et d'intégrer beaucoup de fonctionnalités et d'y cacher des énigmes. Cependant, cela ne vous permettra pas d'augmenter votre note. Ne négligez pas le projet de base ni les projets des autres modules. Vous aurez tout le loisir d'améliorer le projet durant votre été.
 - Faites des commits réguliers sur vos branches de travail.
 - Concevez votre code de façon à ce qu'il soit facile à modifier et à étendre avec de nouvelles fonctionnalités, notamment en prévision de la phase 2.
 - La qualité de la conception et du code produit est plus importante que le nombre de fonctionnalités intégrées.
