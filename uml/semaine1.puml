@@ -1,0 +1,149 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+skinparam style strictuml
+hide empty members
+
+package "inscryption" {
+
+    package "logique" {
+
+        enum TypeAnimal <<enum>> {
+            CHAT
+            GRIZZLY
+            COYOTE
+            MOINEAU
+            CORBEAU
+            ECUREUIL
+            HERMINE
+            LOUVETEAU
+            LOUP
+            PUNAISE
+            --
+            - m_attaque : Integer
+            - m_pv : Integer
+            - m_sang : Integer
+            - m_os : Integer
+            - m_volant : Boolean
+            --
+            + <<Create>> TypeAnimal(att: Integer, pv: Integer, sang: Integer, os: Integer, vol: Boolean)
+            + getAttaque() : Integer
+            + getPv() : Integer
+            + getSang() : Integer
+            + getOs() : Integer
+            + estVolant() : Boolean
+        }
+
+        abstract class CarteLogic {
+            - m_nom : String
+            - m_pointsVie : Integer
+            - m_pointsAttaque : Integer
+            + <<Create>> CarteLogic(nom : String, pv : Integer, att : Integer)
+            + getNom() : String
+            + getPointsVie() : Integer
+            + getPointsAttaque() : Integer
+            + estMorte() : Boolean
+            + recevoirDegats(valeur : Integer)
+        }
+
+        class CarteAnimalLogic extends CarteLogic {
+            - m_type : TypeAnimal
+            + <<Create>> CarteAnimalLogic(type : TypeAnimal)
+            + getType() : TypeAnimal
+        }
+
+        class CarteObstacleLogic extends CarteLogic {
+            + <<Create>> CarteObstacleLogic(nom: String, pv: Integer)
+        }
+
+        class PlateauLogic {
+            - m_casesJoueur : CarteLogic[4]
+            - m_casesAdversaire : CarteLogic[4]
+            - m_intentionsAdversaire : CarteLogic[4]
+            + <<Create>> PlateauLogic()
+            + placerCarte(carte : CarteLogic, position : Integer, estJoueur : Boolean)
+            + getCarte(pos : Integer, estJoueur : Boolean) : CarteLogic
+            + resoudreCombat() : ResultatTour
+        }
+
+        class JoueurLogic {
+            - m_scoreRelatif : Integer
+            - m_reserveOs : Integer
+            - m_main : CarteLogic[*]
+            - m_deckPrincipal : CarteLogic[*]
+            - m_pileEcureuils : CarteLogic[*]
+            + <<Create>> JoueurLogic(compositionInitiale : TypeAnimal[*])
+            + piocher(depuisEcureuils : Boolean)
+            + verifierCout(carte : CarteAnimalLogic) : Boolean
+            + retirerCarteMain(index : Integer) : CarteLogic
+            + ajouterCarteDeck(type : TypeAnimal)
+            + getMain() : CarteLogic[*]
+            + getScore() : Integer
+            + modifierScore(valeur : Integer)
+        }
+
+        class ResultatTour {
+            - m_resumeActions : String[*]
+            - m_partieFinie : Boolean
+            + ajouterEvenement(msg : String)
+            + getResume() : String[*]
+            + estPartieFinie() : Boolean
+        }
+    }
+
+    package "affichage" {
+
+        class InterfaceConsole {
+            + afficherPlateau(plateau : PlateauLogic, score : Integer)
+            + afficherMain(main : CarteLogic[*])
+            + afficherMessage(message : String)
+            + afficherErreur(message : String)
+            + lireSaisie() : String
+        }
+
+        class AnalyseurSaisie {
+            + <<Create>> AnalyseurSaisie()
+            + interpreter(saisie : String) : Commande
+            - validerFormat(saisie : String) : Boolean
+        }
+
+        class Commande {
+            - m_action : String
+            - m_indexCarte : Integer
+            - m_positionCible : Integer
+            + <<Create>> Commande(action : String, index : Integer, pos : Integer)
+            + getAction() : String
+            + getIndex() : Integer
+            + getPosition() : Integer
+        }
+
+        class MoteurJeu {
+            - m_logique : JoueurLogic
+            - m_plateau : PlateauLogic
+            - m_vue : InterfaceConsole
+            - m_analyseur : AnalyseurSaisie
+            + {static} main(args : String[*])
+            + lancerPartie()
+            - boucleTourJoueur()
+
+            - tourAdversaire()
+            - genererChoixCartesAleatoires() : TypeAnimal[2]
+        }
+    }
+}
+
+' --- RELATIONS ---
+CarteAnimalLogic "1" *--> "1" TypeAnimal
+PlateauLogic "1" *--> "0..12" CarteLogic : contient
+JoueurLogic "1" *--> "*" CarteLogic : gère main/deck/ecureuils
+
+MoteurJeu "1" o-- "1" JoueurLogic
+MoteurJeu "1" o-- "1" PlateauLogic
+MoteurJeu "1" o-- "1" InterfaceConsole
+MoteurJeu "1" o-- "1" AnalyseurSaisie
+
+MoteurJeu ..> Commande
+AnalyseurSaisie ..> Commande
+MoteurJeu ..> ResultatTour
+
+@enduml
