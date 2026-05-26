@@ -67,7 +67,7 @@ Nom | Points de vie      |
 Rocher | 5         |     
 Sapin | 3  |
 
-## Proposition d'affichage
+## Proposition d'Inscryption.Affichage
 ```
     Partie 1
 
