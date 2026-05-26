@@ -1,0 +1,234 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+skinparam style strictuml
+hide empty members
+
+package inscryption {
+
+    package logique {
+
+        abstract class CarteLogic <<abstract>> {
+            - m_nom : String
+            - m_pointsVieMax : Integer
+            - m_pointsVieActuels : Integer
+            - m_pointsAttaque : Integer
+            + <<Create>> CarteLogic(nom : String, pv : Integer, att : Integer)
+            + getNom() : String
+            + getPointsVieMax() : Integer
+            + getPointsVieActuels() : Integer
+            + getPointsAttaque() : Integer
+            + estMorte() : Boolean
+            + {abstract} estObstacle() : Boolean
+            + recevoirDegats(valeur : Integer)
+            + soigner(valeur : Integer)
+            + modifierAttaque(valeur : Integer)
+        }
+
+        class CarteObstacleLogic extends CarteLogic {
+            + <<Create>> CarteObstacleLogic(nom: String, pv: Integer)
+            + estObstacle() : Boolean
+        }
+
+        class CarteAnimalLogic extends CarteLogic {
+            - m_coutSang : Integer
+            - m_coutOs : Integer
+            - m_estVolant : Boolean
+            - m_toursSurPlateau : Integer
+            + <<Create>> CarteAnimalLogic(nom: String, pv: Integer, att: Integer, sang: Integer, os: Integer, volant: Boolean)
+            + estObstacle() : Boolean
+            + getCoutSang() : Integer
+            + getCoutOs() : Integer
+            + estVolant() : Boolean
+            + getToursSurPlateau() : Integer
+            + incrementerToursSurPlateau()
+            + ajouterPouvoir(pouvoir : Pouvoir)
+            + retirerPouvoirs() : Pouvoir[*]
+            + getPouvoirs() : Pouvoir[*]
+            + possedePouvoir(pouvoir : Pouvoir) : Boolean
+        }
+
+        abstract class Pouvoir <<abstract>> {
+            + {abstract} getNom() : String
+            + auDebutTour(carte : CarteAnimalLogic, caseActuelle : Emplacement)
+            + auCalculAttaque(degatsBruts : Integer, attaquant : CarteAnimalLogic, cible : CarteLogic, plateau : PlateauLogic) : Integer
+            + apresRecevoirDegats(cible : CarteAnimalLogic, attaquant : CarteAnimalLogic, degatsRecus : Integer, plateau : PlateauLogic)
+            + auSacrifice(carteSacrifiee : CarteAnimalLogic) : Boolean
+            + auMouvement(carte : CarteAnimalLogic, caseActuelle : Emplacement, plateau : PlateauLogic)
+        }
+
+        class NombreusesVies extends Pouvoir {
+            + getNom() : String
+            + auSacrifice(carteSacrifiee : CarteAnimalLogic) : Boolean
+        }
+
+        class Croissance extends Pouvoir {
+            + getNom() : String
+            + auDebutTour(carte : CarteAnimalLogic, caseActuelle : Emplacement)
+        }
+
+        class Puant extends Pouvoir {
+            + getNom() : String
+            + auCalculAttaque(degatsBruts : Integer, attaquant : CarteAnimalLogic, cible : CarteLogic, plateau : PlateauLogic) : Integer
+        }
+
+        class Coureur extends Pouvoir {
+            + getNom() : String
+            + auMouvement(carte : CarteAnimalLogic, caseActuelle : Emplacement, plateau : PlateauLogic)
+        }
+
+        class ContactMortel extends Pouvoir {
+            + getNom() : String
+            + auCalculAttaque(degatsBruts : Integer, attaquant : CarteAnimalLogic, cible : CarteLogic, plateau : PlateauLogic) : Integer
+        }
+
+        class PiquesPointues extends Pouvoir {
+            + getNom() : String
+            + apresRecevoirDegats(cible : CarteAnimalLogic, attaquant : CarteAnimalLogic, degatsRecus : Integer, plateau : PlateauLogic)
+        }
+
+        class FabriqueCartes {
+            + {static} creerChat() : CarteAnimalLogic
+            + {static} creerGrizzly() : CarteAnimalLogic
+            + {static} creerCoyote() : CarteAnimalLogic
+            + {static} creerMoineau() : CarteAnimalLogic
+            + {static} creerCorbeau() : CarteAnimalLogic
+            + {static} creerEcureuil() : CarteAnimalLogic
+            + {static} creerHermine() : CarteAnimalLogic
+            + {static} creerLouveteau() : CarteAnimalLogic
+            + {static} creerLoup() : CarteAnimalLogic
+            + {static} creerPunaise() : CarteAnimalLogic
+            + {static} creerElan() : CarteAnimalLogic
+            + {static} creerVipere() : CarteAnimalLogic
+            + {static} creerPorcEpic() : CarteAnimalLogic
+            + {static} creerRocher() : CarteObstacleLogic
+            + {static} creerSapin() : CarteObstacleLogic
+        }
+
+        class Emplacement {
+            - m_position : Integer
+            + <<Create>> Emplacement(position : Integer)
+            + getPosition() : Integer
+            + estVide() : Boolean
+            + getCarteContenue() : CarteLogic
+            + placerCarte(carte : CarteLogic)
+            + liberer()
+        }
+
+        class PlateauLogic {
+            + <<Create>> PlateauLogic()
+            + resoudreAttaques(campJoueur : Boolean, score : ScoreLogic) : String[*]
+            + avancerMouvements(campJoueur : Boolean)
+            + appliquerEffetsDebutTour(campJoueur : Boolean)
+            + getCasesJoueur() : Emplacement[*]
+            + getCasesAdversaire() : Emplacement[*]
+            + trouverCaseAdjacente(caseActuelle : Emplacement) : Emplacement
+        }
+
+        class ScoreLogic {
+            - m_valeurRelative : Integer
+            + <<Create>> ScoreLogic()
+            + ajouterPointsJoueur(points : Integer)
+            + ajouterPointsAdversaire(points : Integer)
+            + getValeurRelative() : Integer
+            + estPartieTerminee() : Boolean
+            + getGagnant() : String[0..1]
+        }
+
+        class JoueurLogic {
+            - m_reserveOs : Integer
+            - m_main : CarteAnimalLogic[*]
+            - m_deckPrincipal : CarteAnimalLogic[*]
+            - m_pileEcureuils : CarteAnimalLogic[*]
+            + <<Create>> JoueurLogic()
+            + piocherCartePrincipal()
+            + piocherEcureuil()
+            + ajouterOs(quantite : Integer)
+            + consommerOs(quantite : Integer)
+            + ajouterCarteDeck(carte : CarteAnimalLogic)
+            + getMain() : CarteAnimalLogic[*]
+        }
+
+        class AdversaireLogic {
+            + <<Create>> AdversaireLogic(plan : PlanJeu)
+            + obtenirIntention(tour : Integer) : CarteLogic[*]
+            + jouerTour(tour : Integer, plateau : PlateauLogic)
+        }
+
+        class PlanJeu {
+            - m_sequencesApparition : CarteLogic[*]
+            + <<Create>> PlanJeu()
+            + getCartesPourTour(tour : Integer) : CarteLogic[*]
+        }
+    }
+
+    package affichage {
+
+        class InterfaceConsole {
+            + afficherEtatJeu(plateau : PlateauLogic, joueur : JoueurLogic, score : ScoreLogic, tour : Integer, intentions : CarteLogic[*])
+            + afficherMessages(messages : String[*])
+            + lireSaisie() : String
+            + proposerRecompense(choix : CarteAnimalLogic[*]) : CarteAnimalLogic
+            + gererPierreSacrifice(joueur : JoueurLogic)
+        }
+
+        class AnalyseurSaisie {
+            + <<Create>> AnalyseurSaisie()
+            + interpreter(saisie : String) : Commande
+        }
+
+        class Commande {
+            - m_action : String
+            - m_indexCarteMain : Integer[0..1]
+            - m_positionPlateau : Integer[0..1]
+            + <<Create>> Commande(action : String)
+            + <<Create>> Commande(action : String, index : Integer, pos : Integer)
+            + getAction() : String
+            + getIndexCarteMain() : Integer[0..1]
+            + getPositionPlateau() : Integer[0..1]
+        }
+
+        class GestionnairePartie {
+            - m_mancheActuelle : Integer
+            + <<Create>> GestionnairePartie()
+            + executerJeu()
+            - initialiserManche(numero : Integer)
+            - boucleTourJoueur()
+            - phasePierreSacrifice()
+        }
+    }
+}
+
+' --- Relations de structure ---
+CarteAnimalLogic o--> "*\n- m_pouvoirs" Pouvoir : > possède
+
+Emplacement o--> "0..1\n- m_carteContenue" CarteLogic : > contient
+
+PlateauLogic *--> "4\n- m_casesJoueur" Emplacement : > aligne
+PlateauLogic *--> "4\n- m_casesAdversaire" Emplacement : > aligne
+
+AdversaireLogic *--> "1\n- m_planJeu" PlanJeu : > suit
+
+GestionnairePartie *--> "1\n- m_plateau" PlateauLogic : > contrôle
+GestionnairePartie *--> "1\n- m_joueur" JoueurLogic : > régit
+GestionnairePartie *--> "1\n- m_adversaire" AdversaireLogic : > simule
+GestionnairePartie *--> "1\n- m_score" ScoreLogic : > comptabilise
+GestionnairePartie *--> "1\n- m_vue" InterfaceConsole : > met à jour
+GestionnairePartie *--> "1\n- m_analyseur" AnalyseurSaisie : > utilise
+
+' --- Dépendances de paramètres (Ajoutées & Corrigées) ---
+Pouvoir ..> PlateauLogic : <<uses>>
+Pouvoir ..> CarteLogic : <<uses>>
+Pouvoir ..> CarteAnimalLogic : <<uses>>
+Pouvoir ..> Emplacement : <<uses>>
+
+' --- Autres Dépendances ---
+FabriqueCartes ..> CarteAnimalLogic : <<instantiate>>
+FabriqueCartes ..> CarteObstacleLogic : <<instantiate>>
+FabriqueCartes ..> Pouvoir : <<uses>>
+
+AnalyseurSaisie ..> Commande : <<create>>
+GestionnairePartie ..> Commande : <<uses>>
+GestionnairePartie ..> FabriqueCartes : <<uses>>
+
+@enduml
