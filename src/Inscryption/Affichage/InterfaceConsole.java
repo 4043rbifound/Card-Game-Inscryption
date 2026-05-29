@@ -69,7 +69,7 @@ public class InterfaceConsole {
         for (int i = 0; i < casesAdversaire.length; i++) {
 
             CarteLogic carte = casesAdversaire[i].getCarteContenue();
-
+    
             if (carte == null) {
                 System.out.print("[VIDE] ");
             } else {

@@ -21,8 +21,8 @@ package inscryption {
             + estMorte() : Boolean
             + {abstract} estObstacle() : Boolean
             + recevoirDegats(valeur : Integer)
-            + soigner(valeur : Integer)
-            + modifierAttaque(valeur : Integer)
+            + setAttaque(valeur : Integer)
+            + setPv
         }
 
         class CarteObstacleLogic extends CarteLogic {
@@ -35,6 +35,7 @@ package inscryption {
             - m_coutOs : Integer
             - m_estVolant : Boolean
             - m_toursSurPlateau : Integer
+            - m_pouvoir : List<Pouvoir>
             + <<Create>> CarteAnimalLogic(nom: String, pv: Integer, att: Integer, sang: Integer, os: Integer, volant: Boolean)
             + estObstacle() : Boolean
             + getCoutSang() : Integer
@@ -43,9 +44,8 @@ package inscryption {
             + getToursSurPlateau() : Integer
             + incrementerToursSurPlateau()
             + ajouterPouvoir(pouvoir : Pouvoir)
-            + retirerPouvoirs() : Pouvoir[*]
-            + getPouvoirs() : Pouvoir[*]
-            + possedePouvoir(pouvoir : Pouvoir) : Boolean
+            + retirerPouvoirs() : List<Pouvoir>
+            + getPouvoirs() : List<Pouvoir>
         }
 
         abstract class Pouvoir <<abstract>> {
