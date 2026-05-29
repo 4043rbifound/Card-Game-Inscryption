@@ -1,4 +1,16 @@
 package Inscryption.Logique;
 
-public class ContactMortel {
+public class ContactMortel extends Pouvoir {
+
+    @Override
+    public String getNom() {
+        return "Contact Mortel";
+    }
+
+    @Override
+    public void apresRecevoirDegats(CarteAnimalLogic cible, CarteAnimalLogic attaquant, int degatsRecus, PlateauLogic plateau) {
+        if (degatsRecus > 0 && cible != null) {
+            cible.setPv(0);
+        }
+    }
 }
