@@ -9,7 +9,8 @@ public class ContactMortel extends Pouvoir {
 
     @Override
     public void apresRecevoirDegats(CarteAnimalLogic cible, CarteAnimalLogic attaquant, int degatsRecus, PlateauLogic plateau) {
-        if (degatsRecus > 0 && cible != null) {
+        if (degatsRecus > 0 && cible != null &&attaquant != null && attaquant.getPouvoirs().contains(this)) //
+        {
             cible.setPv(0);
         }
     }

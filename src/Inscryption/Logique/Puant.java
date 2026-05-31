@@ -8,13 +8,16 @@ public class Puant extends Pouvoir {
     }
 
     @Override
-    public void auDebutTour(CarteAnimalLogic carte, Emplacement caseActuelle) {
-        Emplacement caseEnFace = caseActuelle.getCaseEnFace();
+    public int auCalculAttaque(int degatsBruts, CarteAnimalLogic attaquant, CarteLogic cible, PlateauLogic plateau) {
+        if (cible != null && !cible.estObstacle()) {
+            CarteAnimalLogic animalCible = (CarteAnimalLogic) cible;
 
-        if (caseEnFace != null && caseEnFace.estOccupee()) {
-            CarteLogic cible = caseEnFace.getCarteContenue();
-            int attaqueActuelle = cible.getPointsAttaque();
-            cible.setAttaque(attaqueActuelle - 1);
+            for (Pouvoir p : animalCible.getPouvoirs()) {
+                if (p.getNom().equalsIgnoreCase("Puant")) {
+                    return Math.max(0, degatsBruts - 1);
+                }
+            }
         }
+        return degatsBruts;
     }
 }
