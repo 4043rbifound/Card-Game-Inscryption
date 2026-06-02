@@ -1,4 +1,4 @@
-package Inscryption.Tests;
+package Inscryption;
 
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -21,8 +21,9 @@ public class TestPlateauLogic {
         CarteAnimalLogic moineau = FabriqueCartes.creerMoineau();
         CarteAnimalLogic loupAdverse = FabriqueCartes.creerLoup();
 
-        plateau.getCasesJoueur()[0].placerCarte(moineau);
-        plateau.getCasesAdversaire()[0].placerCarte(loupAdverse);
+        // MODIFICATION ICI : .get(0) au lieu de [0]
+        plateau.getCasesJoueur().get(0).placerCarte(moineau);
+        plateau.getCasesAdversaire().get(0).placerCarte(loupAdverse);
 
         // Volant doit ignorer la carte en face et impacter le score directement
         plateau.resoudreAttaques(true, score);
@@ -35,8 +36,9 @@ public class TestPlateauLogic {
         CarteAnimalLogic loup = FabriqueCartes.creerLoup(); // 3 ATT
         CarteObstacleLogic rocher = new CarteObstacleLogic("Rocher", 5);
 
-        plateau.getCasesJoueur()[1].placerCarte(loup);
-        plateau.getCasesAdversaire()[1].placerCarte(rocher);
+        // MODIFICATION ICI : .get(1) au lieu de [1]
+        plateau.getCasesJoueur().get(1).placerCarte(loup);
+        plateau.getCasesAdversaire().get(1).placerCarte(rocher);
 
         plateau.resoudreAttaques(true, score);
         assertEquals(2, rocher.getPointsVieActuels()); // 5 - 3 = 2
@@ -48,8 +50,9 @@ public class TestPlateauLogic {
         CarteAnimalLogic loup = FabriqueCartes.creerLoup(); // 3 ATT
         CarteAnimalLogic punaise = FabriqueCartes.creerPunaise(); // A le pouvoir Puant
 
-        plateau.getCasesJoueur()[0].placerCarte(loup);
-        plateau.getCasesAdversaire()[0].placerCarte(punaise);
+        // MODIFICATION ICI : .get(0) au lieu de [0]
+        plateau.getCasesJoueur().get(0).placerCarte(loup);
+        plateau.getCasesAdversaire().get(0).placerCarte(punaise);
 
         // Le loup subit Puant de la punaise en face, ses dégâts tombent à (3 - 1) = 2
         plateau.resoudreAttaques(true, score);
@@ -63,8 +66,9 @@ public class TestPlateauLogic {
         vipere.ajouterPouvoir(new ContactMortel());
         CarteAnimalLogic grizzly = FabriqueCartes.creerGrizzly();
 
-        plateau.getCasesJoueur()[2].placerCarte(vipere);
-        plateau.getCasesAdversaire()[2].placerCarte(grizzly);
+        // MODIFICATION ICI : .get(2) au lieu de [2]
+        plateau.getCasesJoueur().get(2).placerCarte(vipere);
+        plateau.getCasesAdversaire().get(2).placerCarte(grizzly);
 
         plateau.resoudreAttaques(true, score);
         assertTrue("Le grizzly doit mourir instantanément suite aux dégâts de la Vipère", grizzly.estMorte());
@@ -76,8 +80,9 @@ public class TestPlateauLogic {
         CarteAnimalLogic porcepict = new CarteAnimalLogic("Porc-épic", 2, 1, 1, 0, false);
         porcepict.ajouterPouvoir(new PiquePointues());
 
-        plateau.getCasesJoueur()[0].placerCarte(hermine);
-        plateau.getCasesAdversaire()[0].placerCarte(porcepict);
+        // MODIFICATION ICI : .get(0) au lieu de [0]
+        plateau.getCasesJoueur().get(0).placerCarte(hermine);
+        plateau.getCasesAdversaire().get(0).placerCarte(porcepict);
 
         plateau.resoudreAttaques(true, score);
         assertEquals(2, hermine.getPointsVieActuels()); // A pris 1 contre-coup de piques
@@ -86,15 +91,17 @@ public class TestPlateauLogic {
     @Test
     public void testPouvoirCroissance() {
         CarteAnimalLogic louveteau = FabriqueCartes.creerLouveteau();
-        plateau.getCasesJoueur()[0].placerCarte(louveteau);
+        // MODIFICATION ICI : .get(0) au lieu de [0]
+        plateau.getCasesJoueur().get(0).placerCarte(louveteau);
 
-        // Tour 1 début
-        plateau.appliquerEffetsDebutTour(true);
+        // Tour 1 début (Vérification de la casse sur AppliquerEffetsDebutTour)
+        plateau.AppliquerEffetsDebutTour(true);
         assertEquals(1, louveteau.getPointsAttaque()); // Pas encore évolué (1er tour)
 
         // Tour 2 début
-        plateau.appliquerEffetsDebutTour(true);
-        CarteAnimalLogic carteApresEvolution = (CarteAnimalLogic) plateau.getCasesJoueur()[0].getCarteContenue();
+        plateau.AppliquerEffetsDebutTour(true);
+        // MODIFICATION ICI : .get(0) au lieu de [0]
+        CarteAnimalLogic carteApresEvolution = (CarteAnimalLogic) plateau.getCasesJoueur().get(0).getCarteContenue();
         assertEquals(3, carteApresEvolution.getPointsAttaque()); // Évolué en Loup (3 ATT / 2 PV)
     }
 }

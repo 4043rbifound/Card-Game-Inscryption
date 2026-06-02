@@ -1,129 +1,89 @@
 package Inscryption.Affichage;
 
-import java.util.Scanner;
-import Inscryption.Logique.CarteAnimalLogic;
-import Inscryption.Logique.CarteLogic;
-import Inscryption.Logique.Emplacement;
-import Inscryption.Logique.JoueurLogic;
-import Inscryption.Logique.PlateauLogic;
-import Inscryption.Logique.ScoreLogic;
+import java.util.List;
+import Inscryption.Logique.*;
 
 public class InterfaceConsole {
 
-    private Scanner m_scanner;
+    public void afficherEtatJeu(PlateauLogic plateau, JoueurLogic joueur, ScoreLogic score, int tour, CarteLogic[] intentions) {
+        System.out.println("\n========================================");
+        System.out.println("TOURNÉE N°" + tour + " | SCORE ACTUEL : " + score.getValeurRelative());
+        System.out.println("========================================");
 
-    public InterfaceConsole() {
-        this.m_scanner = new Scanner(System.in);
-    }
-
-    public void afficherEtatJeu(
-            PlateauLogic plateau,
-            JoueurLogic joueur,
-            ScoreLogic score,
-            int tour,
-            CarteLogic[] intentions) {
-
-        System.out.println();
-        System.out.println("============================");
-        System.out.println("TOUR " + tour);
-        System.out.println("============================");
-
-        System.out.println("Score : " + score.getValeurRelative());
-        System.out.println();
-
-        System.out.println("Intentions adverses : ");
-
+        // Affichage des intentions de l'adversaire
+        System.out.print("Intentions de l'IA pour ce tour : ");
         for (int i = 0; i < intentions.length; i++) {
-
-            if (intentions[i] == null) {
-                System.out.print("[VIDE] ");
-            } else {
-                System.out.print("[" + intentions[i].getNom() + "] ");
+            if (intentions[i] != null) {
+                System.out.print("[Case " + i + ": " + intentions[i].getNom() + "] ");
             }
         }
-
-        System.out.println();
-        System.out.println();
+        System.out.println("\n----------------------------------------");
 
         afficherPlateau(plateau);
-
-        System.out.println();
-
+        System.out.println("----------------------------------------");
         afficherMain(joueur);
-
-        System.out.println();
-
-        System.out.println("Commandes possibles :");
-        System.out.println("- piocher");
-        System.out.println("- fin");
-        System.out.println("- placer <indexCarte> <position>");
+        System.out.println("========================================");
+        System.out.print("Entrez une commande (ex: 'placer 3 0', 'piocher', 'fin') : ");
     }
 
     public void afficherPlateau(PlateauLogic plateau) {
+        List<Emplacement> casesAdversaire = plateau.getCasesAdversaire();
+        List<Emplacement> casesJoueur = plateau.getCasesJoueur();
 
-        Emplacement[] casesAdversaire = plateau.getCasesAdversaire();
-        Emplacement[] casesJoueur = plateau.getCasesJoueur();
-
-        System.out.println("Plateau adverse :");
-
-        for (int i = 0; i < casesAdversaire.length; i++) {
-
-            CarteLogic carte = casesAdversaire[i].getCarteContenue();
-    
+        System.out.print("Plateau Adversaire : ");
+        for (int i = 0; i < casesAdversaire.size(); i++) {
+            CarteLogic carte = casesAdversaire.get(i).getCarteContenue();
             if (carte == null) {
-                System.out.print("[VIDE] ");
+                System.out.print("[   .   ] ");
             } else {
-                System.out.print("[" + carte.getNom() + " PV:" + carte.getPointsVieActuels() + "] ");
+                System.out.print("[" + carte.getNom() + " " + carte.getPointsVieActuels() + "PV] ");
             }
         }
-
         System.out.println();
 
-        System.out.println("Plateau joueur :");
-
-        for (int i = 0; i < casesJoueur.length; i++) {
-
-            CarteLogic carte = casesJoueur[i].getCarteContenue();
-
+        System.out.print("Plateau Joueur     : ");
+        for (int i = 0; i < casesJoueur.size(); i++) {
+            CarteLogic carte = casesJoueur.get(i).getCarteContenue();
             if (carte == null) {
-                System.out.print("[VIDE] ");
+                System.out.print("[   .   ] ");
             } else {
-                System.out.print("[" + carte.getNom() + " PV:" + carte.getPointsVieActuels() + "] ");
+                System.out.print("[" + carte.getNom() + " " + carte.getPointsVieActuels() + "PV] ");
             }
         }
-
         System.out.println();
     }
 
     public void afficherMain(JoueurLogic joueur) {
-
-        System.out.println("Main du joueur :");
-
-        for (int i = 0; i < joueur.getMain().length; i++) {
-
-            CarteAnimalLogic carte = joueur.getMain()[i];
-
-            System.out.println(
-                    (i + 1)
-                            + ". "
-                            + carte.getNom()
-                            + " | PV: "
-                            + carte.getPointsVieActuels()
-                            + " | ATT: "
-                            + carte.getPointsAttaque());
+        System.out.print("Votre Main : ");
+        CarteAnimalLogic[] main = joueur.getMain();
+        boolean mainVide = true;
+        for (int i = 0; i < main.length; i++) {
+            if (main[i] != null) {
+                System.out.print((i + 1) + ". " + main[i].getNom() + " (" + main[i].getPointsAttaque() + " ATK/" + main[i].getPointsVieActuels() + " PV)  ");
+                mainVide = false;
+            }
         }
+        if (mainVide) {
+            System.out.print("(vide)");
+        }
+        System.out.println();
     }
 
-    public void afficherMessages(String[] messages) {
-
-        for (int i = 0; i < messages.length; i++) {
-            System.out.println(messages[i]);
+    public void afficherMessages(List<String> messages) {
+        if (messages != null) {
+            for (String message : messages) {
+                if (message != null) {
+                    System.out.println("⚔️ " + message);
+                }
+            }
         }
     }
 
     public String lireSaisie() {
-
-        System.out.print("> ");
-        return this.m_scanner.nextLine();
+        java.util.Scanner scanner = new java.util.Scanner(System.in);
+        if (scanner.hasNextLine()) {
+            return scanner.nextLine();
+        }
+        return "fin";
     }
 }
