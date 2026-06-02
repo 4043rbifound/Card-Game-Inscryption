@@ -1,6 +1,6 @@
 package Inscryption.Affichage;
 
-public class AnalyseurSasie {
+public class AnalyseurSaisie {
     public AnalyseurSaisie() {}
 
     public Commande interpreter(String saisie) {
