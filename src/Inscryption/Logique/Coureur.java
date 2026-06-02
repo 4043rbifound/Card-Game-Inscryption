@@ -8,7 +8,7 @@ public class Coureur extends Pouvoir {
     }
 
     @Override
-    public void auMouvement(CarteAnimalLogic carte, Emplacement caseActuelle, PlateauLogic plateau) {
+    public void auMouvement(CarteLogic carte, Emplacement caseActuelle, PlateauLogic plateau) {
         Emplacement caseSuivante = plateau.trouverCaseAdjacente(caseActuelle);
 
         if (caseSuivante != null && caseSuivante.estVide()) {

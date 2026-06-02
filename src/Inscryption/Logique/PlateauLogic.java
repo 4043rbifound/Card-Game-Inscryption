@@ -21,13 +21,15 @@ public class PlateauLogic {
         List<Emplacement> cases = campJoueur ? m_casesJoueur : m_casesAdversaire;
 
         for (Emplacement emp : cases) {
-            if (!emp.estVide() && !emp.getCarteContenue().estObstacle()) {
-                CarteAnimalLogic animal = (CarteAnimalLogic) emp.getCarteContenue();
+            if (!emp.estVide()) {
+                CarteLogic carte = emp.getCarteContenue();
+                if (carte instanceof CarteAnimalLogic) {
+                    CarteAnimalLogic animal = (CarteAnimalLogic) carte;
+                    animal.incrementerToursSurPlateau();
 
-                animal.incrementerToursSurPlateau();
-
-                for (Pouvoir p : animal.getPouvoirs()) {
-                    p.auDebutTour(animal, emp);
+                    for (Pouvoir p : animal.getPouvoirs()) {
+                        p.auDebutTour(animal, emp);
+                    }
                 }
             }
         }
@@ -37,11 +39,10 @@ public class PlateauLogic {
         List<Emplacement> cases = campJoueur ? m_casesJoueur : m_casesAdversaire;
 
         for (Emplacement emp : cases) {
-            if (!emp.estVide() && !emp.getCarteContenue().estObstacle()) {
-                CarteAnimalLogic animal = (CarteAnimalLogic) emp.getCarteContenue();
-
-                for (Pouvoir p : animal.getPouvoirs()) {
-                    p.auMouvement(animal, emp, this);
+            if (!emp.estVide()) {
+                CarteLogic carte = emp.getCarteContenue();
+                for (Pouvoir p : carte.getPouvoirs()) {
+                    p.auMouvement(carte, emp, this);
                 }
             }
         }
@@ -56,63 +57,32 @@ public class PlateauLogic {
         for (Emplacement emp : mesCases) {
             if (emp.estVide()) continue;
 
-            CarteLogic carteAttaquante = emp.getCarteContenue();
-
-            if (carteAttaquante.estObstacle()) continue;
-
-            CarteAnimalLogic attaquant = (CarteAnimalLogic) carteAttaquante;
+            CarteLogic attaquant = emp.getCarteContenue();
             int pos = emp.getPosition();
             Emplacement caseEnFace = casesAdverses.get(pos);
-// combat volant ou case vide
-            if (attaquant.estVolant() || caseEnFace.estVide()) {
-                int degats = attaquant.getPointsAttaque();
-                if (degats > 0) {
-                    if (campJoueur) {
-                        score.ajouterPointsJoueur(degats);
-                        messages.add(attaquant.getNom() + " attaque directement ! +" + degats + " points pour le Joueur.");
-                    } else {
-                        score.ajouterPointsAdversaire(degats);
-                        messages.add(attaquant.getNom() + " attaque directement ! +" + degats + " points pour l'Adversaire.");
-                    }
-                }
+
+            attaquant.attaquer(caseEnFace, score, messages, this);
+
+            if (!caseEnFace.estVide() && caseEnFace.getCarteContenue().getPointsVieActuels() <= 0) {
+                messages.add(caseEnFace.getCarteContenue().getNom() + " est détruit(e) !");
+                caseEnFace.liberer();
             }
-// combat contre carte
-            else {
-                CarteLogic cible = caseEnFace.getCarteContenue();
-                int degatsCalcules = attaquant.getPointsAttaque();
-
-                if (!cible.estObstacle()) {
-                    CarteAnimalLogic animalCible = (CarteAnimalLogic) cible;
-                    for (Pouvoir p : animalCible.getPouvoirs()) {
-                        degatsCalcules = p.auCalculAttaque(degatsCalcules, attaquant, cible, this);
-                    }
-                }
-                if (degatsCalcules > 0) {
-                    cible.recevoirDegats(degatsCalcules);
-                    messages.add(attaquant.getNom() + " inflige " + degatsCalcules + " dégâts à " + cible.getNom() + ".");
-
-                    if (!cible.estObstacle()) {
-                        CarteAnimalLogic animalCible = (CarteAnimalLogic) cible;
-                        for (Pouvoir p : animalCible.getPouvoirs()) {
-                            p.apresRecevoirDegats(animalCible, attaquant, degatsCalcules, this);
-                        }
-                        for (Pouvoir p : attaquant.getPouvoirs()) {
-                            p.apresRecevoirDegats(animalCible, attaquant, degatsCalcules, this);
-                        }
-                    }
-                }
-
-                if (cible.estMorte()) {
-                    messages.add(cible.getNom() + " est détruit(e) !");
-                    caseEnFace.liberer();
-                }
-                if (attaquant.estMorte()) {
-                    messages.add(attaquant.getNom() + " est mort suite au combat.");
-                    emp.liberer();
-                }
+            if (attaquant.getPointsVieActuels() <= 0) {
+                messages.add(attaquant.getNom() + " est mort suite au combat.");
+                emp.liberer();
             }
         }
         return messages;
+    }
+
+    public void appliquerDegatsDirects(int degats, CarteLogic attaquant, ScoreLogic score, List<String> messages) {
+        if (m_casesJoueur.stream().anyMatch(e -> !e.estVide() && e.getCarteContenue() == attaquant)) {
+            score.ajouterPointsJoueur(degats);
+            messages.add(attaquant.getNom() + " attaque directement ! +" + degats + " points pour le Joueur.");
+        } else {
+            score.ajouterPointsAdversaire(degats);
+            messages.add(attaquant.getNom() + " attaque directement ! +" + degats + " points pour l'Adversaire.");
+        }
     }
 
     public Emplacement trouverCaseAdjacente(Emplacement caseActuelle) {
