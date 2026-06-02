@@ -1,12 +1,12 @@
 package Inscryption.Affichage;
 
 
-import inscryption.logique.AdversaireLogic;
-import inscryption.logique.CarteLogic;
-import inscryption.logique.JoueurLogic;
-import inscryption.logique.PlanJeu;
-import inscryption.logique.PlateauLogic;
-import inscryption.logique.ScoreLogic;
+import Inscryption.Logique.AdversaireLogic;
+import Inscryption.Logique.CarteLogic;
+import Inscryption.Logique.JoueurLogic;
+import Inscryption.Logique.PlanJeu;
+import Inscryption.Logique.PlateauLogic;
+import Inscryption.Logique.ScoreLogic;
 
 public class GestionnairePartie {
 
