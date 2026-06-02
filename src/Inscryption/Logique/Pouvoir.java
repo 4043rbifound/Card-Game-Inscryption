@@ -4,20 +4,20 @@ public abstract class Pouvoir {
 
     public abstract String getNom();
 
-    public void auDebutTour(CarteAnimalLogic carte, Emplacement caseActuelle) {
+    public void auDebutTour(CarteLogic carte, Emplacement caseActuelle) {
     }
 
-    public int auCalculAttaque(int degatsBruts, CarteAnimalLogic attaquant, CarteLogic cible, PlateauLogic plateau) {
+    public int auCalculAttaque(int degatsBruts, CarteLogic attaquant, CarteLogic cible, PlateauLogic plateau) {
         return degatsBruts;
     }
 
-    public void apresRecevoirDegats(CarteAnimalLogic cible, CarteAnimalLogic attaquant, int degatsRecus, PlateauLogic plateau) {
+    public void apresRecevoirDegats(CarteLogic cible, CarteLogic attaquant, int degatsRecus, PlateauLogic plateau) {
     }
 
-    public boolean auSacrifice(CarteAnimalLogic carteSacrifiee) {
+    public boolean auSacrifice(CarteLogic carteSacrifiee) {
         return false; // la carte meurt normalement
     }
 
-    public void auMouvement(CarteAnimalLogic carte, Emplacement caseActuelle, PlateauLogic plateau) {
+    public void auMouvement(CarteLogic carte, Emplacement caseActuelle, PlateauLogic plateau) {
     }
 }

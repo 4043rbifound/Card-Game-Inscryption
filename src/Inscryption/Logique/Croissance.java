@@ -8,7 +8,7 @@ public class Croissance extends Pouvoir {
     }
 
     @Override
-    public void auDebutTour(CarteAnimalLogic carte, Emplacement caseActuelle) {
+    public void auDebutTour(CarteLogic carte, Emplacement caseActuelle) {
         if (carte.getToursSurPlateau() == 2) {
             carte.setAttaque(3);
             carte.setPv(2);

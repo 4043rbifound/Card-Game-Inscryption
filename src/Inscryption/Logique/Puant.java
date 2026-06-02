@@ -8,11 +8,9 @@ public class Puant extends Pouvoir {
     }
 
     @Override
-    public int auCalculAttaque(int degatsBruts, CarteAnimalLogic attaquant, CarteLogic cible, PlateauLogic plateau) {
-        if (cible != null && !cible.estObstacle()) {
-            CarteAnimalLogic animalCible = (CarteAnimalLogic) cible;
-
-            for (Pouvoir p : animalCible.getPouvoirs()) {
+    public int auCalculAttaque(int degatsBruts, CarteLogic attaquant, CarteLogic cible, PlateauLogic plateau) {
+        if (cible != null) {
+            for (Pouvoir p : cible.getPouvoirs()) {
                 if (p.getNom().equalsIgnoreCase("Puant")) {
                     return Math.max(0, degatsBruts - 1);
                 }

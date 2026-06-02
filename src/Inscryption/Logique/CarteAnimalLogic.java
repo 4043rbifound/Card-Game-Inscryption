@@ -1,46 +1,57 @@
 package Inscryption.Logique;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CarteAnimalLogic extends CarteLogic {
     private int m_coutSang;
     private int m_coutOs;
-    private boolean m_estVolant;
     private int m_toursSurPlateau;
-    private List<Pouvoir> m_pouvoirs;
 
-    public CarteAnimalLogic(String nom, int pv, int att, int sang, int os, boolean volant) {
+    public CarteAnimalLogic(String nom, int pv, int att, int sang, int os) {
         super(nom, pv, att);
         this.m_coutSang = sang;
         this.m_coutOs = os;
-        this.m_estVolant = volant;
         this.m_toursSurPlateau = 0;
-        this.m_pouvoirs = new ArrayList<>();
     }
 
-    // qlq getters
+    @Override
+    public void attaquer(Emplacement caseEnFace, ScoreLogic score, List<String> messages, PlateauLogic plateau) {
+        if (caseEnFace.estVide()) {
+            int degats = this.getPointsAttaque();
+            if (degats > 0) {
+                plateau.appliquerDegatsDirects(degats, this, score, messages);
+            }
+        }
+        else {
+            CarteLogic cible = caseEnFace.getCarteContenue();
+            int degatsCalcules = this.getPointsAttaque();
+
+            for (Pouvoir p : cible.getPouvoirs()) {
+                degatsCalcules = p.auCalculAttaque(degatsCalcules, this, cible, plateau);
+            }
+
+            if (degatsCalcules > 0) {
+                cible.recevoirDegats(degatsCalcules);
+                messages.add(this.getNom() + " inflige " + degatsCalcules + " dégâts à " + cible.getNom() + ".");
+
+                for (Pouvoir p : cible.getPouvoirs()) {
+                    p.apresRecevoirDegats(cible, this, degatsCalcules, plateau);
+                }
+                for (Pouvoir p : this.getPouvoirs()) {
+                    p.apresRecevoirDegats(cible, this, degatsCalcules, plateau);
+                }
+            }
+        }
+    }
+
     public int getCoutSang() { return m_coutSang; }
     public int getCoutOs() { return m_coutOs; }
-    public boolean estVolant() { return m_estVolant; }
-    public int getToursSurPlateau() { return m_toursSurPlateau; }
-
     public void incrementerToursSurPlateau() {
         this.m_toursSurPlateau++;
     }
-    // pour pierre sacrifice
-    public void ajouterPouvoir(Pouvoir pouvoir) {
-            this.m_pouvoirs.add(pouvoir);
-        }
 
-
-    public List<Pouvoir> retirerPouvoirs() {
-        List<Pouvoir> anciens = new ArrayList<>(this.m_pouvoirs);
-        this.m_pouvoirs.clear();
-        return anciens;
-    }
-
-    public List<Pouvoir> getPouvoirs() {
-        return m_pouvoirs;
+    @Override
+    public int getToursSurPlateau() {
+        return this.m_toursSurPlateau;
     }
 }
