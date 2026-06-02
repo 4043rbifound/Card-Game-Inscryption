@@ -3,7 +3,9 @@ package Inscryption.Logique;
 public class FabriqueCartes {
 
     public static CarteAnimalLogic creerChat() {
-        return new CarteAnimalLogic("Chat", 1, 0, 1, 0, false);
+        CarteAnimalLogic chat = new CarteAnimalLogic("Chat", 1, 0, 1, 0, false);
+        chat.ajouterPouvoir(new NombreusesVies()); // Ajout du pouvoir Phase 2
+        return chat;
     }
 
     public static CarteAnimalLogic creerGrizzly() {
@@ -31,7 +33,9 @@ public class FabriqueCartes {
     }
 
     public static CarteAnimalLogic creerLouveteau() {
-        return new CarteAnimalLogic("Louveteau", 1, 1, 1, 0, false);
+        CarteAnimalLogic louveteau = new CarteAnimalLogic("Louveteau", 1, 1, 1, 0, false);
+        louveteau.ajouterPouvoir(new Croissance()); // FIX : Ajout du pouvoir requis par le test !
+        return louveteau;
     }
 
     public static CarteAnimalLogic creerLoup() {
@@ -39,14 +43,8 @@ public class FabriqueCartes {
     }
 
     public static CarteAnimalLogic creerPunaise() {
-        return new CarteAnimalLogic("Punaise", 2, 1, 0, 2, false);
-    }
-
-    public static CarteObstacleLogic creerRocher() {
-        return new CarteObstacleLogic("Rocher", 5);
-    }
-
-    public static CarteObstacleLogic creerSapin() {
-        return new CarteObstacleLogic("Sapin", 3);
+        CarteAnimalLogic punaise = new CarteAnimalLogic("Punaise", 2, 1, 0, 2, false);
+        punaise.ajouterPouvoir(new Puant()); // Ajout du pouvoir Phase 2
+        return punaise;
     }
 }
