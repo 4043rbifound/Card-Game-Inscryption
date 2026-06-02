@@ -1,12 +1,12 @@
 package Inscryption.Affichage;
 
 import java.util.Scanner;
-import inscryption.logique.CarteAnimalLogic;
-import inscryption.logique.CarteLogic;
-import inscryption.logique.Emplacement;
-import inscryption.logique.JoueurLogic;
-import inscryption.logique.PlateauLogic;
-import inscryption.logique.ScoreLogic;
+import Inscryption.Logique.CarteAnimalLogic;
+import Inscryption.Logique.CarteLogic;
+import Inscryption.Logique.Emplacement;
+import Inscryption.Logique.JoueurLogic;
+import Inscryption.Logique.PlateauLogic;
+import Inscryption.Logique.ScoreLogic;
 
 public class InterfaceConsole {
 
