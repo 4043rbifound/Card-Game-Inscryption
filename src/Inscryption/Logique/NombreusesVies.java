@@ -7,7 +7,7 @@ public class NombreusesVies extends Pouvoir {
         return "Nombreuses Vies";
     }
 
-    @Override
+    
     public boolean auSacrifice(CarteAnimalLogic carteSacrifiee) {
         if(carteSacrifiee != null && carteSacrifiee.getPouvoirs().contains(this)) {
             return true;
