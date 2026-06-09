@@ -30,14 +30,18 @@ public class JoueurLogic {
     }
 
     private void initialiserCollectionEtDeck() {
-        // Initialiser la collection de départ
+        // Initialiser la collection de départ en intercalant les écureuils
         m_collection.add(FabriqueCartes.creerLoup());
+        for (int i = 0; i < 3; i++) m_collection.add(FabriqueCartes.creerEcureuil());
+            
         m_collection.add(FabriqueCartes.creerLouveteau());
+        for (int i = 0; i < 3; i++) m_collection.add(FabriqueCartes.creerEcureuil());
+        
         m_collection.add(FabriqueCartes.creerMoineau());
+        for (int i = 0; i < 3; i++) m_collection.add(FabriqueCartes.creerEcureuil());
+        
         m_collection.add(FabriqueCartes.creerHermine());
-        for (int i = 0; i < 11; i++) {
-            m_collection.add(FabriqueCartes.creerEcureuil());
-        }
+        for (int i = 0; i < 2; i++) m_collection.add(FabriqueCartes.creerEcureuil());
 
         resetForNewPartie();
     }
