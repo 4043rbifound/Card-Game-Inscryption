@@ -68,10 +68,10 @@ public class Emplacement {
             m_carteContenue.recevoirDegats(degatsCalcules);
 
             for (Pouvoir p : m_carteContenue.getPouvoirs()) {
-                p.apresRecevoirDegats(m_carteContenue, attaquant, degatsCalcules);
+                p.apresSubirDegats(m_carteContenue, attaquant, degatsCalcules);
             }
             for (Pouvoir p : attaquant.getPouvoirs()) {
-                p.apresRecevoirDegats(m_carteContenue, attaquant, degatsCalcules);
+                p.apresInfligerDegats(m_carteContenue, attaquant, degatsCalcules);
             }
         }
 

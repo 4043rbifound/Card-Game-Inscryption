@@ -274,28 +274,13 @@ public class GestionnairePartie {
 
                 // Poser la carte
                 casesJoueur.get(positionCible).placerCarte(carteAPlacer);
-                m_joueur.getMain()[indexMainZeroBased] = null;
-                tasserMain();
+                m_joueur.supprimerCarteMain(indexMainZeroBased);
 
                 this.m_vue.afficherMessageSimple("Placement de " + carteAPlacer.getNom() + " en B" + (positionCible + 1));
 
                 CarteLogic[] intentions = this.m_adversaire.obtenirIntention(this.m_tour);
                 this.m_vue.afficherEtatJeu(this.m_plateau, this.m_joueur, this.m_score, this.m_partieActuelle, this.m_tour, intentions);
             }
-        }
-    }
-
-    private void tasserMain() {
-        CarteAnimalLogic[] main = m_joueur.getMain();
-        CarteAnimalLogic[] nouvelleMain = new CarteAnimalLogic[main.length];
-        int index = 0;
-        for (int i = 0; i < main.length; i++) {
-            if (main[i] != null) {
-                nouvelleMain[index++] = main[i];
-            }
-        }
-        for (int i = 0; i < main.length; i++) {
-            main[i] = nouvelleMain[i];
         }
     }
 
