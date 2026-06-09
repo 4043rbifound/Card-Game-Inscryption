@@ -7,14 +7,10 @@ public class InterfaceConsole {
 
     private String padRight(String s, int n) {
         if (s == null) s = "";
-        if (s.length() >= n) {
-            return s;
+        while (s.length() < n) {
+            s += " ";
         }
-        StringBuilder sb = new StringBuilder(s);
-        while (sb.length() < n) {
-            sb.append(" ");
-        }
-        return sb.toString();
+        return s;
     }
 
     private String centerText(String s, int width) {
@@ -25,11 +21,15 @@ public class InterfaceConsole {
         int totalSpaces = width - s.length();
         int leftSpaces = totalSpaces / 2;
         int rightSpaces = totalSpaces - leftSpaces;
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < leftSpaces; i++) sb.append(" ");
-        sb.append(s);
-        for (int i = 0; i < rightSpaces; i++) sb.append(" ");
-        return sb.toString();
+        String res = "";
+        for (int i = 0; i < leftSpaces; i++) {
+            res += " ";
+        }
+        res += s;
+        for (int i = 0; i < rightSpaces; i++) {
+            res += " ";
+        }
+        return res;
     }
 
     private String getShortPowerName(String fullName) {
@@ -263,12 +263,82 @@ public class InterfaceConsole {
         System.out.println("  [sacrifier <position>] Sacrifier une creature sur la case indiquee (genere 1 sang)");
     }
 
-    public String lireSaisie() {
+    public void afficherMessageSimple(String message) {
+        System.out.println(message);
+    }
+
+    public String lireSaisieAvecPrompt(String prompt) {
         java.util.Scanner scanner = new java.util.Scanner(System.in);
-        System.out.print("$ ");
+        System.out.print(prompt);
         if (scanner.hasNextLine()) {
             return scanner.nextLine();
         }
-        return "fin";
+        return "";
+    }
+
+    public String lireSaisie() {
+        return lireSaisieAvecPrompt("$ ");
+    }
+
+    public String demanderChoixPioche() {
+        System.out.println("\nChoisissez votre pioche :");
+        System.out.println("1. Deck principal");
+        System.out.println("2. Pile d'ecureuils");
+        return lireSaisieAvecPrompt("Choix (1 ou 2) : ");
+    }
+
+    public String demanderChoixNouvelleCarte(int partie) {
+        System.out.println("\n==================================================");
+        System.out.println("CHOIX D'UNE NOUVELLE CARTE (Partie " + partie + ")");
+        System.out.println("==================================================");
+        System.out.println("Choisissez une carte a ajouter a votre deck :");
+        System.out.println("1. Elan (PV: 4, Att: 2, Cout Sang: 2, Pouvoir: Coureur)");
+        System.out.println("2. Vipere (PV: 1, Att: 1, Cout Sang: 2, Pouvoir: Contact Mortel)");
+        System.out.println("3. Porc-epic (PV: 2, Att: 1, Cout Sang: 1, Pouvoir: Piques pointues)");
+        return lireSaisieAvecPrompt("Votre choix (1, 2 ou 3) : ");
+    }
+
+    public int demanderCartePlateauASacrifier(List<Emplacement> cases) {
+        System.out.println("\n==================================================");
+        System.out.println("PIERRE DE SACRIFICE");
+        System.out.println("==================================================");
+        System.out.println("Choisissez une de vos cartes sur le plateau a sacrifier pour recuperer son pouvoir :");
+        for (int i = 0; i < cases.size(); i++) {
+            Emplacement emp = cases.get(i);
+            if (!emp.estVide()) {
+                CarteLogic c = emp.getCarteContenue();
+                String pstr = c.getLignePouvoir();
+                if (!pstr.isEmpty()) {
+                    pstr = " (Pouvoir: " + pstr + ")";
+                }
+                System.out.println((i + 1) + ". Case B" + (i + 1) + " : " + c.getNom() + pstr);
+            } else {
+                System.out.println((i + 1) + ". Case B" + (i + 1) + " : (vide)");
+            }
+        }
+        String saisie = lireSaisieAvecPrompt("Entrez la position (1 a 4 pour B1 a B4) : ");
+        try {
+            return Integer.parseInt(saisie.trim()) - 1;
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    public int demanderCarteCibleTransfert(List<CarteAnimalLogic> collection, String nomPouvoir) {
+        System.out.println("\nChoisissez la carte de votre collection qui va recevoir le pouvoir " + nomPouvoir + " :");
+        for (int i = 0; i < collection.size(); i++) {
+            CarteAnimalLogic c = collection.get(i);
+            String pstr = c.getLignePouvoir();
+            if (!pstr.isEmpty()) {
+                pstr = " (Pouvoir: " + pstr + ")";
+            }
+            System.out.println((i + 1) + ". " + c.getNom() + pstr);
+        }
+        String saisie = lireSaisieAvecPrompt("Entrez le numero de la carte cible : ");
+        try {
+            return Integer.parseInt(saisie.trim()) - 1;
+        } catch (Exception e) {
+            return -1;
+        }
     }
 }

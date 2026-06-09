@@ -112,4 +112,30 @@ public class TestPlateauLogic {
         CarteLogic carteApresEvolution = plateau.getCasesJoueur().get(0).getCarteContenue();
         assertEquals(3, carteApresEvolution.getPointsAttaque()); // Évolué en Loup (3 ATT / 2 PV)
     }
+
+    @Test
+    public void testPouvoirCoureur() {
+        CarteAnimalLogic elan = FabriqueCartes.creerElan();
+        plateau.getCasesJoueur().get(0).placerCarte(elan);
+        
+        // Au début, Elan est sur la case 0
+        assertSame(elan, plateau.getCasesJoueur().get(0).getCarteContenue());
+        assertTrue(plateau.getCasesJoueur().get(1).estVide());
+        
+        // Avancer les mouvements : Elan doit se déplacer de B1 (index 0) vers B2 (index 1)
+        plateau.avancerMouvementsJoueur();
+        
+        assertTrue(plateau.getCasesJoueur().get(0).estVide());
+        assertSame(elan, plateau.getCasesJoueur().get(1).getCarteContenue());
+        
+        // Placer un obstacle sur B3 (index 2) pour bloquer la droite d'Elan
+        CarteObstacleLogic rocher = FabriqueCartes.creerRocher();
+        plateau.getCasesJoueur().get(2).placerCarte(rocher);
+        
+        // Avancer les mouvements : la droite d'Elan (B3) est bloquée par le Rocher. Il doit tenter la gauche (B1, index 0).
+        plateau.avancerMouvementsJoueur();
+        
+        assertTrue(plateau.getCasesJoueur().get(1).estVide());
+        assertSame(elan, plateau.getCasesJoueur().get(0).getCarteContenue());
+    }
 }

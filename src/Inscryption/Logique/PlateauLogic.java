@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PlateauLogic {
+public class PlateauLogic implements PlateauAccess {
     private final List<Emplacement> m_casesJoueur;
     private final List<Emplacement> m_casesAdversaire;
 
@@ -54,12 +54,22 @@ public class PlateauLogic {
     }
 
     private void avancerMouvements(List<Emplacement> cases) {
+        List<CarteLogic> aDeplacer = new java.util.ArrayList<>();
+        for (Emplacement emp : cases) {
+            if (!emp.estVide()) {
+                aDeplacer.add(emp.getCarteContenue());
+            }
+        }
+
         for (Emplacement emp : cases) {
             if (!emp.estVide()) {
                 CarteLogic carte = emp.getCarteContenue();
-                Emplacement caseAdjacente = trouverCaseAdjacente(emp);
-                for (Pouvoir p : carte.getPouvoirs()) {
-                    p.auMouvement(carte, emp, caseAdjacente);
+                if (aDeplacer.contains(carte)) {
+                    aDeplacer.remove(carte);
+                    for (Pouvoir p : carte.getPouvoirs()) {
+                        p.setPlateau(this);
+                        p.auMouvement(carte, emp);
+                    }
                 }
             }
         }

@@ -167,4 +167,11 @@ public class JoueurLogic {
     public int getNombreEcureuils() {
         return this.m_nombreEcureuils;
     }
+
+    public void ajouterCarteMain(CarteAnimalLogic carte) {
+        if (carte != null && this.m_nombreCartesMain < this.m_main.length) {
+            this.m_main[this.m_nombreCartesMain] = carte;
+            this.m_nombreCartesMain++;
+        }
+    }
 }

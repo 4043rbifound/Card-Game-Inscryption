@@ -18,18 +18,9 @@ public abstract class Pouvoir {
         return false; // la carte meurt normalement
     }
 
-    public void auMouvement(CarteLogic carte, Emplacement caseActuelle) {
+    public void setPlateau(PlateauAccess plateau) {
     }
 
-    /**
-     * Variante de auMouvement avec la case adjacente pré-calculée par PlateauLogic.
-     * Les pouvoirs de déplacement (ex: Coureur) surchargent CETTE méthode
-     * pour éviter de dépendre directement de PlateauLogic.
-     *
-     * @param carte         la carte qui se déplace
-     * @param caseActuelle  l’emplacement actuel de la carte
-     * @param caseAdjacente l’emplacement adjacent calculé par le plateau (null si aucun)
-     */
-    public void auMouvement(CarteLogic carte, Emplacement caseActuelle, Emplacement caseAdjacente) {
+    public void auMouvement(CarteLogic carte, Emplacement caseActuelle) {
     }
 }

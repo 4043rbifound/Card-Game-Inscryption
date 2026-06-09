@@ -10,7 +10,7 @@ public class CarteObstacleLogic extends CarteLogic {
 
     @Override
     public int attaquer(Emplacement caseEnFace) {
-        // Un obstacle n'attaque pas : le corps de la méthode reste vide !
+        // Un obstacle n'attaque pas
         return 0;
     }
 }
