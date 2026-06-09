@@ -1,4 +1,4 @@
-package Inscryption.Tests;
+package Inscryption;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class TestCarteAnimalLogic {
         assertEquals("Puant", coyote.getPouvoirs().get(0).getNom());
 
         // Test de retrait des pouvoirs (Pierre de sacrifice)
-        var anciensPouvoirs = coyote.retirerPouvoirs();
+        java.util.List<Inscryption.Logique.Pouvoir> anciensPouvoirs = coyote.retirerPouvoirs();
         assertEquals(1, anciensPouvoirs.size());
         assertTrue(coyote.getPouvoirs().isEmpty());
     }

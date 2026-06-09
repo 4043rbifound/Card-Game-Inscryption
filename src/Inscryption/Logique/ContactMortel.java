@@ -8,9 +8,9 @@ public class ContactMortel extends Pouvoir {
     }
 
     @Override
-    public void apresRecevoirDegats(CarteLogic cible, CarteLogic attaquant, int degatsRecus, PlateauLogic plateau) {
+    public void apresRecevoirDegats(CarteLogic cible, CarteLogic attaquant, int degatsRecus) {
         if (degatsRecus > 0 && cible != null) {
-            cible.setPv(0);
+            cible.tuerParContactMortel();
         }
     }
 }

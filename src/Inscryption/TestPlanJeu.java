@@ -20,7 +20,6 @@ public class TestPlanJeu {
         assertNotNull("Le tableau du tour 1 ne doit pas être nul", cartesTour1);
         assertEquals("Le tableau doit contenir 4 emplacements", 4, cartesTour1.length);
 
-        // Vérification des cartes spécifiées dans initialiserPlan()
         assertNotNull("La case 0 doit contenir un Louveteau", cartesTour1[0]);
         assertEquals("Louveteau", cartesTour1[0].getNom());
 
@@ -43,14 +42,12 @@ public class TestPlanJeu {
 
     @Test
     public void testTourInvalide() {
-        // Test aux limites (Tour 0 ou négatif)
         CarteLogic[] cartesTour0 = planJeu.getCartesPourTour(0);
         assertEquals("Un tour invalide doit retourner un tableau vide de taille 4", 4, cartesTour0.length);
         for (CarteLogic carte : cartesTour0) {
             assertNull("Toutes les cases doivent être nulles", carte);
         }
 
-        // Test au-delà de la limite des 10 tours configurés
         CarteLogic[] cartesTour11 = planJeu.getCartesPourTour(11);
         assertEquals(4, cartesTour11.length);
         for (CarteLogic carte : cartesTour11) {

@@ -3,6 +3,7 @@ public class Main
 {
     public static void main(String[] args)
     {
-        System.out.println("Another challenger... It has been ages.");
+        Inscryption.Affichage.GestionnairePartie gestionnaire = new Inscryption.Affichage.GestionnairePartie();
+        gestionnaire.executerJeu();
     }
 }

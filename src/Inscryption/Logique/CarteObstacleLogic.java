@@ -9,7 +9,8 @@ public class CarteObstacleLogic extends CarteLogic {
     }
 
     @Override
-    public void attaquer(Emplacement caseEnFace, ScoreLogic score, List<String> messages, PlateauLogic plateau) {
+    public int attaquer(Emplacement caseEnFace) {
         // Un obstacle n'attaque pas : le corps de la méthode reste vide !
+        return 0;
     }
 }
