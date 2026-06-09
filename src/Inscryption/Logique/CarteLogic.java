@@ -18,7 +18,7 @@ public abstract class CarteLogic {
         this.m_pouvoirs = new ArrayList<>();
     }
 
-    public abstract void attaquer(Emplacement caseEnFace, ScoreLogic score, List<String> messages, PlateauLogic plateau);
+    public abstract int attaquer(Emplacement caseEnFace);
 
     public List<Pouvoir> getPouvoirs() { return m_pouvoirs; }
     public void ajouterPouvoir(Pouvoir pouvoir) { this.m_pouvoirs.add(pouvoir); }
@@ -35,6 +35,22 @@ public abstract class CarteLogic {
     public int getPointsAttaque() { return m_pointsAttaque; }
 
     public boolean estMorte() { return this.m_pointsVieActuels <= 0; }
+
+    public void tuerParContactMortel() {
+        // Par defaut, un obstacle ne subit pas Contact Mortel
+    }
+
+    public int executerSacrifice(Emplacement caseActuelle, JoueurLogic joueur) {
+        return 0; // Par defaut (obstacles) : ne fait rien, retourne 0 sang
+    }
+
+    public String getLigneAttaque() {
+        return "";
+    }
+
+    public String getLignePouvoir() {
+        return "";
+    }
 
     public void recevoirDegats(int valeur) {
         if (valeur > 0) {

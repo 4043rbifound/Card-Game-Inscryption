@@ -8,7 +8,7 @@ public class PiquePointues extends Pouvoir {
     }
 
     @Override
-    public void apresRecevoirDegats(CarteLogic cible, CarteLogic attaquant, int degatsRecus, PlateauLogic plateau) {
+    public void apresRecevoirDegats(CarteLogic cible, CarteLogic attaquant, int degatsRecus) {
         if (degatsRecus > 0 && cible != null) {
             if (attaquant != null && !attaquant.estMorte()) {
                 int pvActuelsAttaquant = attaquant.getPointsVieActuels();

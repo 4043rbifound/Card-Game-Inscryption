@@ -27,10 +27,14 @@ public class TestEmplacement {
         assertTrue(emp.estVide());
         assertNull(emp.getCarteContenue());
 
-        // Placement d'un obstacle
+        // Placement d'un obstacle : on vérifie le comportement (attaque = 0), pas le type
         CarteObstacleLogic rocher = new CarteObstacleLogic("Rocher", 5);
         emp.placerCarte(rocher);
         assertFalse(emp.estVide());
-        assertTrue(emp.getCarteContenue().estObstacle());
+        // Un obstacle n'attaque pas : son attaque vaut 0
+        assertEquals(0, emp.getCarteContenue().getPointsAttaque());
+        // Un obstacle ne peut pas se déplacer : ses tours sur plateau restent à 0 après incrémentation
+        emp.getCarteContenue().incrementerToursSurPlateau();
+        assertEquals(0, emp.getCarteContenue().getToursSurPlateau());
     }
 }

@@ -1,4 +1,4 @@
-package Inscryption.Tests;
+package Inscryption;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -16,7 +16,8 @@ public class TestFabriqueCartes {
         assertEquals(1, ecureuil.getPointsVieMax());
         assertEquals(0, ecureuil.getCoutSang());
         assertEquals(0, ecureuil.getCoutOs());
-        assertFalse(ecureuil.estVolant());
+        // Un écureuil n'est pas volant : il n'a aucun pouvoir
+        assertTrue("Un écureuil ne doit avoir aucun pouvoir", ecureuil.getPouvoirs().isEmpty());
     }
 
     @Test
@@ -27,7 +28,6 @@ public class TestFabriqueCartes {
         assertEquals(1, louveteau.getPointsVieMax());
         assertEquals(1, louveteau.getCoutSang());
 
-        // Phase 2: Vérifier la présence de Croissance
         boolean aCroissance = false;
         for (Pouvoir p : louveteau.getPouvoirs()) {
             if (p.getNom().equalsIgnoreCase("Croissance")) {

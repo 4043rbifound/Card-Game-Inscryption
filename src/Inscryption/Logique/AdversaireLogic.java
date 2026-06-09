@@ -1,6 +1,6 @@
 package Inscryption.Logique;
 
-import java.util.List; // N'oubliez pas l'import !
+import java.util.List;
 
 public class AdversaireLogic {
 
