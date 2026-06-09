@@ -73,4 +73,8 @@ public abstract class CarteLogic {
     public int getToursSurPlateau() {
         return 0;
     }
+
+    public Pouvoir getPouvoirATransferer() {
+        return null;
+    }
 }

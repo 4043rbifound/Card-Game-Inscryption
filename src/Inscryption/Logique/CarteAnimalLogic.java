@@ -26,11 +26,10 @@ public class CarteAnimalLogic extends CarteLogic {
             }
         }
         if (survit) {
-            System.out.println("  " + this.getNom() + " resiste au sacrifice grace a Nombreuses Vies !");
+            // Survit, ne libère pas l'emplacement
         } else {
             caseActuelle.liberer();
             joueur.ajouterOs(1);
-            System.out.println("  +1 os. Total : " + joueur.getReserveOs());
         }
         return 1;
     }
@@ -56,6 +55,7 @@ public class CarteAnimalLogic extends CarteLogic {
         return copie;
     }
 
+    @Override
     public Pouvoir getPouvoirATransferer() {
         if (!this.getPouvoirs().isEmpty()) {
             return this.getPouvoirs().get(0);

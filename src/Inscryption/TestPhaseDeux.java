@@ -185,4 +185,45 @@ public class TestPhaseDeux {
         assertEquals(0, joueur.getReserveSang());
         assertEquals(0, joueur.getReserveOs());
     }
+
+    @Test
+    public void testPiocheCartes() {
+        JoueurLogic joueur = new JoueurLogic();
+        int initialMain = joueur.getNombreCartesMain();
+        int initialDeck = joueur.getNombreCartesDeck();
+        int initialEcureuils = joueur.getNombreEcureuils();
+        
+        // Au démarrage, le joueur a pioché 4 cartes de départ
+        assertEquals(4, initialMain);
+        
+        // Piocher une carte du deck principal
+        joueur.piocherCartePrincipal();
+        assertEquals(5, joueur.getNombreCartesMain());
+        assertEquals(initialDeck - 1, joueur.getNombreCartesDeck());
+        
+        // Piocher un écureuil
+        joueur.piocherEcureuil();
+        assertEquals(6, joueur.getNombreCartesMain());
+        assertEquals(initialEcureuils - 1, joueur.getNombreEcureuils());
+    }
+
+    @Test
+    public void testMiseEnPlacePartie() {
+        PlateauLogic plateau = new PlateauLogic();
+        // Le plateau joueur a 4 emplacements
+        assertEquals(4, plateau.getCasesJoueur().size());
+        assertEquals(4, plateau.getCasesAdversaire().size());
+        
+        // Les emplacements sont initialement vides
+        for (int i = 0; i < 4; i++) {
+            assertTrue(plateau.getCasesJoueur().get(i).estVide());
+            assertTrue(plateau.getCasesAdversaire().get(i).estVide());
+        }
+        
+        JoueurLogic joueur = new JoueurLogic();
+        // La pioche commence bien avec 15 cartes (dont 4 piochées au départ, donc 11 restantes dans le deck)
+        assertEquals(11, joueur.getNombreCartesDeck());
+        // La pile d'écureuils commence bien avec 20 cartes
+        assertEquals(20, joueur.getNombreEcureuils());
+    }
 }
