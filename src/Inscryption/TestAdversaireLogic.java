@@ -32,12 +32,12 @@ public class TestAdversaireLogic {
 
         // Vérification sur les cases de l'adversaire (List<Emplacement>)
         assertFalse("La case 0 ne doit plus être vide", plateau.getCasesAdversaire().get(0).estVide());
-        assertEquals("Louveteau", plateau.getCasesAdversaire().get(0).getCarteContenue().getNom());
+        assertEquals("Louveteau", plateau.getCasesAdversaire().get(0).getCarteContenue().orElseThrow().getNom());
 
         assertTrue("La case 1 doit rester vide", plateau.getCasesAdversaire().get(1).estVide());
 
         assertFalse("La case 2 ne doit plus être vide", plateau.getCasesAdversaire().get(2).estVide());
-        assertEquals("Moineau", plateau.getCasesAdversaire().get(2).getCarteContenue().getNom());
+        assertEquals("Moineau", plateau.getCasesAdversaire().get(2).getCarteContenue().orElseThrow().getNom());
 
         assertTrue("La case 3 doit rester vide", plateau.getCasesAdversaire().get(3).estVide());
     }
@@ -52,8 +52,8 @@ public class TestAdversaireLogic {
         adversaire.jouerTour(2, plateau);
 
         // L'adversaire ne doit pas avoir écrasé le Grizzly car la case n'était pas vide
-        assertNotNull(plateau.getCasesAdversaire().get(1).getCarteContenue());
+        assertTrue(plateau.getCasesAdversaire().get(1).getCarteContenue().isPresent());
         assertEquals("Le Grizzly doit être resté sur la case 1",
-                "Grizzly", plateau.getCasesAdversaire().get(1).getCarteContenue().getNom());
+                "Grizzly", plateau.getCasesAdversaire().get(1).getCarteContenue().orElseThrow().getNom());
     }
 }

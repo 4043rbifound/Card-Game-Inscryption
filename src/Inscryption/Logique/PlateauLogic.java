@@ -35,13 +35,12 @@ public class PlateauLogic implements PlateauAccess {
 
     private void appliquerEffetsDebutTourSurCases(List<Emplacement> cases) {
         for (Emplacement emp : cases) {
-            if (!emp.estVide()) {
-                CarteLogic carte = emp.getCarteContenue();
+            emp.getCarteContenue().ifPresent(carte -> {
                 carte.incrementerToursSurPlateau();
                 for (Pouvoir p : carte.getPouvoirs()) {
                     p.auDebutTour(carte, emp);
                 }
-            }
+            });
         }
     }
 
@@ -56,14 +55,11 @@ public class PlateauLogic implements PlateauAccess {
     private void avancerMouvements(List<Emplacement> cases) {
         List<CarteLogic> aDeplacer = new java.util.ArrayList<>();
         for (Emplacement emp : cases) {
-            if (!emp.estVide()) {
-                aDeplacer.add(emp.getCarteContenue());
-            }
+            emp.getCarteContenue().ifPresent(aDeplacer::add);
         }
 
         for (Emplacement emp : cases) {
-            if (!emp.estVide()) {
-                CarteLogic carte = emp.getCarteContenue();
+            emp.getCarteContenue().ifPresent(carte -> {
                 if (aDeplacer.contains(carte)) {
                     aDeplacer.remove(carte);
                     for (Pouvoir p : carte.getPouvoirs()) {
@@ -71,7 +67,7 @@ public class PlateauLogic implements PlateauAccess {
                         p.auMouvement(carte, emp);
                     }
                 }
-            }
+            });
         }
     }
 
@@ -92,30 +88,30 @@ public class PlateauLogic implements PlateauAccess {
         List<Emplacement> casesAdverses = campJoueur ? m_casesAdversaire : m_casesJoueur;
 
         for (Emplacement emp : mesCases) {
-            if (emp.estVide()) continue;
+            emp.getCarteContenue().ifPresent(attaquant -> {
+                Emplacement caseEnFace = casesAdverses.get(emp.getPosition());
 
-            CarteLogic attaquant = emp.getCarteContenue();
-            Emplacement caseEnFace = casesAdverses.get(emp.getPosition());
+                int degats = attaquant.attaquer(caseEnFace);
+                degatsParCase.set(emp.getPosition(), degats);
 
-            int degats = attaquant.attaquer(caseEnFace);
-            degatsParCase.set(emp.getPosition(), degats);
-
-            // L'attaquant peut lui-même avoir subi des dégâts en retour (ex : Piques Pointues)
-            emp.libererSiMorte();
+                // L'attaquant peut lui-même avoir subi des dégâts en retour (ex : Piques Pointues)
+                emp.libererSiMorte();
+            });
         }
 
         return degatsParCase;
     }
 
-    public Emplacement trouverCaseAdjacente(Emplacement caseActuelle) {
+    @Override
+    public java.util.Optional<Emplacement> trouverCaseAdjacente(Emplacement caseActuelle) {
         List<Emplacement> cases = m_casesJoueur.contains(caseActuelle) ? m_casesJoueur : m_casesAdversaire;
         int pos = caseActuelle.getPosition();
         if (pos + 1 < 4 && cases.get(pos + 1).estVide()) {
-            return cases.get(pos + 1);
+            return java.util.Optional.of(cases.get(pos + 1));
         } else if (pos - 1 >= 0 && cases.get(pos - 1).estVide()) {
-            return cases.get(pos - 1);
+            return java.util.Optional.of(cases.get(pos - 1));
         }
-        return null;
+        return java.util.Optional.empty();
     }
 
     public List<Emplacement> getCasesJoueur()    { return m_casesJoueur; }
