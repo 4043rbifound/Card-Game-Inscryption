@@ -174,4 +174,15 @@ public class JoueurLogic {
             this.m_nombreCartesMain++;
         }
     }
+
+    public void supprimerCarteMain(int index) {
+        if (index >= 0 && index < this.m_nombreCartesMain) {
+            this.m_main[index] = null;
+            for (int i = index; i < this.m_nombreCartesMain - 1; i++) {
+                this.m_main[i] = this.m_main[i + 1];
+            }
+            this.m_main[this.m_nombreCartesMain - 1] = null;
+            this.m_nombreCartesMain--;
+        }
+    }
 }

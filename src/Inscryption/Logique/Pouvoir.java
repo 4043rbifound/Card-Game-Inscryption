@@ -11,7 +11,10 @@ public abstract class Pouvoir {
         return degatsBruts;
     }
 
-    public void apresRecevoirDegats(CarteLogic cible, CarteLogic attaquant, int degatsRecus) {
+    public void apresSubirDegats(CarteLogic cible, CarteLogic attaquant, int degatsRecus) {
+    }
+
+    public void apresInfligerDegats(CarteLogic cible, CarteLogic attaquant, int degatsRecus) {
     }
 
     public boolean auSacrifice(CarteLogic carteSacrifiee) {

@@ -60,9 +60,6 @@ public class CarteAnimalLogic extends CarteLogic {
         if (!this.getPouvoirs().isEmpty()) {
             return this.getPouvoirs().get(0);
         }
-        if (this.getLignePouvoir().equalsIgnoreCase("Volant")) {
-            return new Volant();
-        }
         return null;
     }
 

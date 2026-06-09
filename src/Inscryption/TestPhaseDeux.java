@@ -44,43 +44,38 @@ public class TestPhaseDeux {
         JoueurLogic joueur = new JoueurLogic();
         List<CarteAnimalLogic> collection = joueur.getCollection();
         
-        // On cherche un Moineau (Volant) et une Hermine dans la collection
-        CarteAnimalLogic moineau = null;
+        // On cherche un Louveteau (Croissance) et une Hermine dans la collection
+        CarteAnimalLogic louveteau = null;
         CarteAnimalLogic hermine = null;
         for (CarteAnimalLogic c : collection) {
-            if (c.getNom().equals("Moineau")) moineau = c;
+            if (c.getNom().equals("Louveteau")) louveteau = c;
             if (c.getNom().equals("Hermine")) hermine = c;
         }
         
-        assertNotNull(moineau);
+        assertNotNull(louveteau);
         assertNotNull(hermine);
         
-        // On transfère le pouvoir Volant du Moineau à l'Hermine
-        Pouvoir pATransferer = null;
-        if (!moineau.getPouvoirs().isEmpty()) {
-            pATransferer = moineau.getPouvoirs().get(0);
-        } else if (moineau.getLignePouvoir().equalsIgnoreCase("Volant")) {
-            pATransferer = new Volant();
-        }
+        // On transfère le pouvoir Croissance du Louveteau à l'Hermine
+        Pouvoir pATransferer = louveteau.getPouvoirATransferer();
         
         assertNotNull(pATransferer);
-        assertEquals("Volant", pATransferer.getNom());
+        assertEquals("Croissance", pATransferer.getNom());
         
-        // Retirer le moineau de la collection et ajouter le pouvoir à l'hermine
-        collection.remove(moineau);
+        // Retirer le louveteau de la collection et ajouter le pouvoir à l'hermine
+        collection.remove(louveteau);
         hermine.ajouterPouvoir(pATransferer);
         
-        // Vérifie que la collection de l'hermine a maintenant le pouvoir Volant
-        boolean aVolant = false;
+        // Vérifie que la collection de l'hermine a maintenant le pouvoir Croissance
+        boolean aCroissance = false;
         for (Pouvoir p : hermine.getPouvoirs()) {
-            if (p.getNom().equalsIgnoreCase("Volant")) aVolant = true;
+            if (p.getNom().equalsIgnoreCase("Croissance")) aCroissance = true;
         }
-        assertTrue(aVolant);
+        assertTrue(aCroissance);
         
         // Réinitialise pour une nouvelle partie
         joueur.resetForNewPartie();
         
-        // Vérifie que la main ou le deck contient des copies de l'Hermine avec le pouvoir Volant
+        // Vérifie que la main ou le deck contient des copies de l'Hermine avec le pouvoir Croissance
         CarteAnimalLogic hermineDuDeck = null;
         // On cherche la copie de l'hermine dans la main
         for (CarteAnimalLogic c : joueur.getMain()) {
@@ -90,7 +85,11 @@ public class TestPhaseDeux {
         }
         
         if (hermineDuDeck != null) {
-            assertTrue(hermineDuDeck.getLignePouvoir().equalsIgnoreCase("Volant"));
+            boolean aCroissanceDeck = false;
+            for (Pouvoir p : hermineDuDeck.getPouvoirs()) {
+                if (p.getNom().equalsIgnoreCase("Croissance")) aCroissanceDeck = true;
+            }
+            assertTrue(aCroissanceDeck);
         }
     }
 
