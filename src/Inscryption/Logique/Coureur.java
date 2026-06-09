@@ -21,11 +21,12 @@ public class Coureur extends Pouvoir {
     @Override
     public void auMouvement(CarteLogic carte, Emplacement caseActuelle) {
         if (this.plateau != null) {
-            Emplacement caseAdjacente = this.plateau.trouverCaseAdjacente(caseActuelle);
-            if (caseAdjacente != null && caseAdjacente.estVide()) {
-                caseActuelle.liberer();
-                caseAdjacente.placerCarte(carte);
-            }
+            this.plateau.trouverCaseAdjacente(caseActuelle)
+                .filter(Emplacement::estVide)
+                .ifPresent(caseAdjacente -> {
+                    caseActuelle.liberer();
+                    caseAdjacente.placerCarte(carte);
+                });
         }
     }
 }

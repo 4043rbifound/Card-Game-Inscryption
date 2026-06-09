@@ -5,5 +5,5 @@ package Inscryption.Logique;
  * de sans cycle de deps.
  */
 public interface PlateauAccess {
-    Emplacement trouverCaseAdjacente(Emplacement caseActuelle);
+    java.util.Optional<Emplacement> trouverCaseAdjacente(Emplacement caseActuelle);
 }

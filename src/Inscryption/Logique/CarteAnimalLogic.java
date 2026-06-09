@@ -56,11 +56,11 @@ public class CarteAnimalLogic extends CarteLogic {
     }
 
     @Override
-    public Pouvoir getPouvoirATransferer() {
+    public java.util.Optional<Pouvoir> getPouvoirATransferer() {
         if (!this.getPouvoirs().isEmpty()) {
-            return this.getPouvoirs().get(0);
+            return java.util.Optional.of(this.getPouvoirs().get(0));
         }
-        return null;
+        return java.util.Optional.empty();
     }
 
     /**

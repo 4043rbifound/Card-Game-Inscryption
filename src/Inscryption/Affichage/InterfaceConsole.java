@@ -43,9 +43,9 @@ public class InterfaceConsole {
         return fullName;
     }
 
-    private String[] getCardLines(CarteLogic carte, String emptyLabel) {
+    private String[] getCardLines(java.util.Optional<? extends CarteLogic> optCarte, String emptyLabel) {
         String[] lines = new String[7];
-        if (carte == null) {
+        if (optCarte.isEmpty()) {
             lines[0] = "*************";
             lines[1] = "*           *";
             lines[2] = "*           *";
@@ -54,6 +54,7 @@ public class InterfaceConsole {
             lines[5] = "*           *";
             lines[6] = "*************";
         } else {
+            CarteLogic carte = optCarte.get();
             lines[0] = "*-----------*";
             lines[1] = "|" + centerText(carte.getNom(), 11) + "|";
             lines[2] = "|-----------|";
@@ -82,7 +83,7 @@ public class InterfaceConsole {
         // 1. Intentions row
         String[][] intentionsLines = new String[4][7];
         for (int i = 0; i < 4; i++) {
-            intentionsLines[i] = getCardLines(intentions != null ? intentions[i] : null, "");
+            intentionsLines[i] = getCardLines(intentions != null ? java.util.Optional.ofNullable(intentions[i]) : java.util.Optional.empty(), "");
         }
         for (int line = 0; line < 7; line++) {
             System.out.print("        ");
@@ -306,7 +307,7 @@ public class InterfaceConsole {
         for (int i = 0; i < cases.size(); i++) {
             Emplacement emp = cases.get(i);
             if (!emp.estVide()) {
-                CarteLogic c = emp.getCarteContenue();
+                CarteLogic c = emp.getCarteContenue().orElseThrow();
                 String pstr = c.getLignePouvoir();
                 if (!pstr.isEmpty()) {
                     pstr = " (Pouvoir: " + pstr + ")";

@@ -56,7 +56,7 @@ public class TestPhaseDeux {
         assertNotNull(hermine);
         
         // On transfère le pouvoir Croissance du Louveteau à l'Hermine
-        Pouvoir pATransferer = louveteau.getPouvoirATransferer();
+        Pouvoir pATransferer = louveteau.getPouvoirATransferer().orElseThrow();
         
         assertNotNull(pATransferer);
         assertEquals("Croissance", pATransferer.getNom());
@@ -138,7 +138,7 @@ public class TestPhaseDeux {
         assertEquals(0, joueur.getReserveOs());
         
         // On récupère la carte
-        CarteLogic sac = plateau.getCasesJoueur().get(0).getCarteContenue();
+        CarteLogic sac = plateau.getCasesJoueur().get(0).getCarteContenue().orElseThrow();
         assertNotNull(sac);
         
         // Exécuter le sacrifice
@@ -165,7 +165,7 @@ public class TestPhaseDeux {
         
         assertEquals(0, joueur.getReserveSang());
         assertEquals(1, joueur.getReserveOs()); // L'os persiste
-        assertEquals("Hermine", plateau.getCasesJoueur().get(0).getCarteContenue().getNom());
+        assertEquals("Hermine", plateau.getCasesJoueur().get(0).getCarteContenue().orElseThrow().getNom());
     }
 
     @Test

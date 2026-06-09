@@ -74,7 +74,7 @@ public abstract class CarteLogic {
         return 0;
     }
 
-    public Pouvoir getPouvoirATransferer() {
-        return null;
+    public java.util.Optional<Pouvoir> getPouvoirATransferer() {
+        return java.util.Optional.empty();
     }
 }

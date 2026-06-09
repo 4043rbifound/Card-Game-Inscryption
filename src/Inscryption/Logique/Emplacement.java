@@ -23,8 +23,8 @@ public class Emplacement {
         return this.m_carteContenue == null;
     }
 
-    public CarteLogic getCarteContenue() {
-        return this.m_carteContenue;
+    public java.util.Optional<CarteLogic> getCarteContenue() {
+        return java.util.Optional.ofNullable(this.m_carteContenue);
     }
 
     public void placerCarte(CarteLogic carte) {

@@ -109,7 +109,7 @@ public class TestPlateauLogic {
 
         // Tour 2 début
         plateau.appliquerEffetsDebutTour(true);
-        CarteLogic carteApresEvolution = plateau.getCasesJoueur().get(0).getCarteContenue();
+        CarteLogic carteApresEvolution = plateau.getCasesJoueur().get(0).getCarteContenue().orElseThrow();
         assertEquals(3, carteApresEvolution.getPointsAttaque()); // Évolué en Loup (3 ATT / 2 PV)
     }
 
@@ -119,14 +119,14 @@ public class TestPlateauLogic {
         plateau.getCasesJoueur().get(0).placerCarte(elan);
         
         // Au début, Elan est sur la case 0
-        assertSame(elan, plateau.getCasesJoueur().get(0).getCarteContenue());
+        assertSame(elan, plateau.getCasesJoueur().get(0).getCarteContenue().orElseThrow());
         assertTrue(plateau.getCasesJoueur().get(1).estVide());
         
         // Avancer les mouvements : Elan doit se déplacer de B1 (index 0) vers B2 (index 1)
         plateau.avancerMouvementsJoueur();
         
         assertTrue(plateau.getCasesJoueur().get(0).estVide());
-        assertSame(elan, plateau.getCasesJoueur().get(1).getCarteContenue());
+        assertSame(elan, plateau.getCasesJoueur().get(1).getCarteContenue().orElseThrow());
         
         // Placer un obstacle sur B3 (index 2) pour bloquer la droite d'Elan
         CarteObstacleLogic rocher = FabriqueCartes.creerRocher();
@@ -136,6 +136,6 @@ public class TestPlateauLogic {
         plateau.avancerMouvementsJoueur();
         
         assertTrue(plateau.getCasesJoueur().get(1).estVide());
-        assertSame(elan, plateau.getCasesJoueur().get(0).getCarteContenue());
+        assertSame(elan, plateau.getCasesJoueur().get(0).getCarteContenue().orElseThrow());
     }
 }

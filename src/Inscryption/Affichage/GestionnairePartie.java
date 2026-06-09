@@ -209,7 +209,7 @@ public class GestionnairePartie {
                     continue;
                 }
 
-                CarteLogic carteSacrifiee = casesJoueur.get(positionCible).getCarteContenue();
+                CarteLogic carteSacrifiee = casesJoueur.get(positionCible).getCarteContenue().orElseThrow();
                 int sangGenere = carteSacrifiee.executerSacrifice(casesJoueur.get(positionCible), this.m_joueur);
 
                 if (sangGenere <= 0) {
@@ -305,7 +305,7 @@ public class GestionnairePartie {
             if (choixValide && nouvelle != null) {
                 // Ajouter à la collection pour persister d'une partie à l'autre
                 m_joueur.ajouterCarteACollection(nouvelle);
-                // Ajouter également directement dans la main pour pouvoir la jouer tout de suite
+                // Ajouter égalementpl directement dans la main pour pouvoir la jouer tout de suite
                 m_joueur.ajouterCarteMain(FabriqueCartes.creerCopieFraiche(nouvelle));
                 this.m_vue.afficherMessageSimple(nouvelle.getNom() + " ajoutee a votre collection et directement dans votre main !");
             }
@@ -318,12 +318,9 @@ public class GestionnairePartie {
         // Vérifier s'il y a des créatures avec un pouvoir sur le plateau
         boolean aCreatureAvecPouvoir = false;
         for (Emplacement emp : casesJoueur) {
-            if (!emp.estVide()) {
-                CarteLogic c = emp.getCarteContenue();
-                if (c.getPouvoirATransferer() != null) {
-                    aCreatureAvecPouvoir = true;
-                    break;
-                }
+            if (emp.getCarteContenue().flatMap(CarteLogic::getPouvoirATransferer).isPresent()) {
+                aCreatureAvecPouvoir = true;
+                break;
             }
         }
         
@@ -343,9 +340,9 @@ public class GestionnairePartie {
 
         int indexSacrifie = -1;
         CarteLogic sacrifiee = null;
-        Pouvoir pouvoirATransferer = null;
+        java.util.Optional<Pouvoir> optPouvoir = java.util.Optional.empty();
 
-        while (pouvoirATransferer == null) {
+        while (optPouvoir.isEmpty()) {
             indexSacrifie = this.m_vue.demanderCartePlateauASacrifier(casesJoueur);
             if (indexSacrifie < 0 || indexSacrifie >= casesJoueur.size()) {
                 this.m_vue.afficherMessageSimple("Position invalide.");
@@ -356,12 +353,14 @@ public class GestionnairePartie {
                 this.m_vue.afficherMessageSimple("Cette case est vide !");
                 continue;
             }
-            sacrifiee = emp.getCarteContenue();
-            pouvoirATransferer = sacrifiee.getPouvoirATransferer();
-            if (pouvoirATransferer == null) {
+            sacrifiee = emp.getCarteContenue().orElseThrow();
+            optPouvoir = sacrifiee.getPouvoirATransferer();
+            if (optPouvoir.isEmpty()) {
                 this.m_vue.afficherMessageSimple(sacrifiee.getNom() + " n'a aucun pouvoir a transferer. Choisissez une autre carte.");
             }
         }
+
+        Pouvoir pouvoirATransferer = optPouvoir.get();
 
         this.m_vue.afficherMessageSimple("Vous recuperez le pouvoir : " + pouvoirATransferer.getNom());
         
