@@ -288,15 +288,20 @@ public class InterfaceConsole {
         return lireSaisieAvecPrompt("Choix (1 ou 2) : ");
     }
 
-    public String demanderChoixNouvelleCarte(int partie) {
+    public String demanderChoixDeuxCartes(int partie, CarteAnimalLogic option1, CarteAnimalLogic option2) {
         System.out.println("\n==================================================");
         System.out.println("CHOIX D'UNE NOUVELLE CARTE (Partie " + partie + ")");
         System.out.println("==================================================");
         System.out.println("Choisissez une carte a ajouter a votre deck :");
-        System.out.println("1. Elan (PV: 4, Att: 2, Cout Sang: 2, Pouvoir: Coureur)");
-        System.out.println("2. Vipere (PV: 1, Att: 1, Cout Sang: 2, Pouvoir: Contact Mortel)");
-        System.out.println("3. Porc-epic (PV: 2, Att: 1, Cout Sang: 1, Pouvoir: Piques pointues)");
-        return lireSaisieAvecPrompt("Votre choix (1, 2 ou 3) : ");
+        System.out.println("1. " + option1.getNom() + " (PV: " + option1.getPointsVieActuels()
+                + ", Att: " + option1.getPointsAttaque()
+                + ", Cout Sang: " + option1.getCoutSang()
+                + ", Pouvoir: " + option1.getLignePouvoir() + ")");
+        System.out.println("2. " + option2.getNom() + " (PV: " + option2.getPointsVieActuels()
+                + ", Att: " + option2.getPointsAttaque()
+                + ", Cout Sang: " + option2.getCoutSang()
+                + ", Pouvoir: " + option2.getLignePouvoir() + ")");
+        return lireSaisieAvecPrompt("Votre choix (1 ou 2) : ");
     }
 
     public int demanderCartePlateauASacrifier(List<Emplacement> cases) {
