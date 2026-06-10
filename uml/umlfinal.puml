@@ -192,6 +192,7 @@ package inscryption {
             + <<Create>> JoueurLogic()
             - initialiserCollectionEtDeck()
             + resetForNewPartie()
+            + resetRessourcesPourNouvellePartie()
             + ajouterCarteACollection(carte : CarteAnimalLogic)
             + getCollection() : List<CarteAnimalLogic>
             + ajouterCarteDeck(carte : CarteAnimalLogic)
@@ -210,6 +211,7 @@ package inscryption {
             + getNombreCartesDeck() : Integer
             + getNombreEcureuils() : Integer
             + ajouterCarteMain(carte : CarteAnimalLogic)
+            + supprimerCarteMain(index : Integer)
         }
 
         class AdversaireLogic {
@@ -238,7 +240,7 @@ package inscryption {
             + lireSaisieAvecPrompt(prompt : String) : String
             + lireSaisie() : String
             + demanderChoixPioche() : String
-            + demanderChoixNouvelleCarte(partie : Integer) : String
+            + demanderChoixDeuxCartes(partie : Integer, option1 : CarteAnimalLogic, option2 : CarteAnimalLogic) : String
             + demanderCartePlateauASacrifier(cases : List<Emplacement>) : Integer
             + demanderCarteCibleTransfert(collection : List<CarteAnimalLogic>, nomPouvoir : String) : Integer
             + afficherActionsPossibles()
@@ -274,7 +276,7 @@ package inscryption {
             - executerPartie(partie : Integer) : Boolean
             - compterCartesVivantesJoueur() : Integer
             - boucleTourJoueur()
-            - tasserMain()
+
             - choisirNouvelleCarte()
             - pierreDeSacrifice()
             + {static} main(args : String[])
