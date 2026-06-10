@@ -13,7 +13,6 @@ package inscryption {
             - m_pointsVieMax : Integer
             - m_pointsVieActuels : Integer
             - m_pointsAttaque : Integer
-            # m_pouvoirs : Pouvoir[*]
             + <<Create>> CarteLogic(nom : String, pv : Integer, att : Integer)
             + {abstract} attaquer(caseEnFace : Emplacement) : Integer
             + getPouvoirs() : Pouvoir[*]
@@ -100,7 +99,6 @@ package inscryption {
         }
 
         class Coureur extends Pouvoir {
-            - plateau : PlateauAccess
             + getNom() : String
             + setPlateau(plateau : PlateauAccess)
             + auMouvement(carte : CarteLogic, caseActuelle : Emplacement)
@@ -142,7 +140,6 @@ package inscryption {
 
         class Emplacement {
             - m_position : Integer
-            - m_carteContenue : CarteLogic
             + <<Create>> Emplacement(position : Integer)
             + getPosition() : Integer
             + estVide() : Boolean
@@ -155,8 +152,6 @@ package inscryption {
         }
 
         class PlateauLogic implements PlateauAccess {
-            - m_casesJoueur : Emplacement[*]
-            - m_casesAdversaire : Emplacement[*]
             + <<Create>> PlateauLogic()
             + AppliquerEffetsDebutTour(campJoueur : Boolean)
             + appliquerEffetsDebutTourJoueur()
@@ -185,10 +180,6 @@ package inscryption {
             - m_nombreCartesMain : Integer
             - m_nombreCartesDeck : Integer
             - m_nombreEcureuils : Integer
-            - m_main : CarteAnimalLogic[*]
-            - m_deckPrincipal : CarteAnimalLogic[*]
-            - m_pileEcureuils : CarteAnimalLogic[*]
-            - m_collection : CarteAnimalLogic[*]
             + <<Create>> JoueurLogic()
             - initialiserCollectionEtDeck()
             + resetForNewPartie()
@@ -221,7 +212,6 @@ package inscryption {
         }
 
         class PlanJeu {
-            - m_sequencesApparition : CarteLogic[*][*]
             + <<Create>> PlanJeu()
             - initialiserPlan()
             + getCartesPourTour(tour : Integer) : CarteLogic[*]
@@ -263,12 +253,6 @@ package inscryption {
         }
 
         class GestionnairePartie {
-            - m_plateau : PlateauLogic
-            - m_joueur : JoueurLogic
-            - m_adversaire : AdversaireLogic
-            - m_score : ScoreLogic
-            - m_vue : InterfaceConsole
-            - m_analyseur : AnalyseurSaisie
             - m_tour : Integer
             - m_partieActuelle : Integer
             + <<Create>> GestionnairePartie()
@@ -298,6 +282,8 @@ JoueurLogic o--> "*\n- m_pileEcureuils" CarteAnimalLogic : > possède
 JoueurLogic o--> "*\n- m_collection" CarteAnimalLogic : > possède
 
 AdversaireLogic *--> "1\n- m_planJeu" PlanJeu : > suit
+PlanJeu o--> "*\n- m_sequencesApparition" CarteLogic : > contient
+Coureur o--> "0..1\n- plateau" PlateauAccess : > utilise
 
 GestionnairePartie *--> "1\n- m_plateau" PlateauLogic : > contrôle
 GestionnairePartie *--> "1\n- m_joueur" JoueurLogic : > régit
@@ -307,6 +293,8 @@ GestionnairePartie *--> "1\n- m_vue" InterfaceConsole : > met à jour
 GestionnairePartie *--> "1\n- m_analyseur" AnalyseurSaisie : > utilise
 
 ' --- Dépendances de paramètres ---
+PlateauLogic ..> Pouvoir : <<uses>>
+Emplacement ..> Pouvoir : <<uses>>
 Pouvoir ..> CarteLogic : <<uses>>
 Pouvoir ..> Emplacement : <<uses>>
 Pouvoir ..> PlateauAccess : <<uses>>
