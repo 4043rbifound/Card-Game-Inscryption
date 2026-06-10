@@ -3,6 +3,7 @@ package Inscryption.Affichage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
+import java.util.Random;
 import Inscryption.Logique.*;
 
 public class GestionnairePartie {
@@ -32,6 +33,10 @@ public class GestionnairePartie {
             if (gagne) {
                 victoires++;
                 this.m_vue.afficherMessageSimple("\n--- VICTOIRE DE LA PARTIE " + partie + " ---");
+                if (partie == 2) {
+                    choisirNouvelleCarte();
+                    pierreDeSacrifice();
+                }
             } else {
                 this.m_vue.afficherMessageSimple("\n--- DEFAITE ---");
                 this.m_vue.afficherMessageSimple("Vous avez perdu la partie " + partie + ". Partie terminee.");
@@ -49,8 +54,15 @@ public class GestionnairePartie {
         this.m_plateau = new PlateauLogic();
         // Rocher obstacle sur B2 (index 1)
         this.m_plateau.getCasesJoueur().get(1).placerCarte(FabriqueCartes.creerRocher());
-        
-        this.m_joueur.resetForNewPartie();
+
+        if (partie == 1) {
+            // Première partie : initialisation complète (deck construit depuis la collection, 4 cartes piochées)
+            this.m_joueur.resetForNewPartie();
+        } else {
+            // Parties 2 et 3 : on conserve la main et la pioche, on remet juste os/sang à zéro
+            this.m_joueur.resetRessourcesPourNouvellePartie();
+        }
+
         this.m_score = new ScoreLogic();
         this.m_tour = 1;
 
@@ -120,11 +132,6 @@ public class GestionnairePartie {
             this.m_plateau.avancerMouvementsAdversaire();
 
             this.m_vue.afficherMessageSimple("  Os actuels : " + this.m_joueur.getReserveOs());
-
-            if (this.m_tour == 2) {
-                choisirNouvelleCarte();
-                pierreDeSacrifice();
-            }
 
             m_tour++;
         }
@@ -285,27 +292,40 @@ public class GestionnairePartie {
     }
 
     private void choisirNouvelleCarte() {
+        // Tirer 2 cartes au hasard parmi toutes les cartes animales disponibles
+        List<CarteAnimalLogic> pool = new ArrayList<>();
+        pool.add(FabriqueCartes.creerChat());
+        pool.add(FabriqueCartes.creerGrizzly());
+        pool.add(FabriqueCartes.creerCoyote());
+        pool.add(FabriqueCartes.creerMoineau());
+        pool.add(FabriqueCartes.creerCorbeau());
+        pool.add(FabriqueCartes.creerHermine());
+        pool.add(FabriqueCartes.creerLouveteau());
+        pool.add(FabriqueCartes.creerLoup());
+        pool.add(FabriqueCartes.creerPunaise());
+        pool.add(FabriqueCartes.creerElan());
+        pool.add(FabriqueCartes.creerVipere());
+        pool.add(FabriqueCartes.creerPorcEpic());
+        Collections.shuffle(pool, new Random());
+        CarteAnimalLogic option1 = pool.get(0);
+        CarteAnimalLogic option2 = pool.get(1);
+
         boolean choixValide = false;
         while (!choixValide) {
-            String choix = this.m_vue.demanderChoixNouvelleCarte(this.m_partieActuelle);
+            String choix = this.m_vue.demanderChoixDeuxCartes(this.m_partieActuelle, option1, option2);
             CarteAnimalLogic nouvelle = null;
             if (choix.equals("1")) {
-                nouvelle = FabriqueCartes.creerElan();
+                nouvelle = option1;
                 choixValide = true;
             } else if (choix.equals("2")) {
-                nouvelle = FabriqueCartes.creerVipere();
-                choixValide = true;
-            } else if (choix.equals("3")) {
-                nouvelle = FabriqueCartes.creerPorcEpic();
+                nouvelle = option2;
                 choixValide = true;
             } else {
-                this.m_vue.afficherMessageSimple("Choix invalide. Veuillez entrer 1, 2 ou 3.");
+                this.m_vue.afficherMessageSimple("Choix invalide. Veuillez entrer 1 ou 2.");
             }
 
             if (choixValide && nouvelle != null) {
-                // Ajouter à la collection pour persister d'une partie à l'autre
                 m_joueur.ajouterCarteACollection(nouvelle);
-                // Ajouter égalementpl directement dans la main pour pouvoir la jouer tout de suite
                 m_joueur.ajouterCarteMain(FabriqueCartes.creerCopieFraiche(nouvelle));
                 this.m_vue.afficherMessageSimple(nouvelle.getNom() + " ajoutee a votre collection et directement dans votre main !");
             }

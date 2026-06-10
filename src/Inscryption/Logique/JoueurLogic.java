@@ -30,18 +30,23 @@ public class JoueurLogic {
     }
 
     private void initialiserCollectionEtDeck() {
-        // Initialiser la collection de départ en intercalant les écureuils
-        m_collection.add(FabriqueCartes.creerLoup());
-        for (int i = 0; i < 3; i++) m_collection.add(FabriqueCartes.creerEcureuil());
-
+        // Deck de 15 cartes : 8 écureuils + 7 animaux
+        // Les 4 dernières cartes = 1ers piochées => 3 écureuils + 1 loup en main de départ
         m_collection.add(FabriqueCartes.creerLouveteau());
-        for (int i = 0; i < 3; i++) m_collection.add(FabriqueCartes.creerEcureuil());
-        
         m_collection.add(FabriqueCartes.creerMoineau());
-        for (int i = 0; i < 3; i++) m_collection.add(FabriqueCartes.creerEcureuil());
-        
         m_collection.add(FabriqueCartes.creerHermine());
-        for (int i = 0; i < 2; i++) m_collection.add(FabriqueCartes.creerEcureuil());
+        m_collection.add(FabriqueCartes.creerElan());
+        m_collection.add(FabriqueCartes.creerVipere());
+        m_collection.add(FabriqueCartes.creerPorcEpic());
+        m_collection.add(FabriqueCartes.creerEcureuil());
+        m_collection.add(FabriqueCartes.creerEcureuil());
+        m_collection.add(FabriqueCartes.creerEcureuil());
+        m_collection.add(FabriqueCartes.creerEcureuil());
+        m_collection.add(FabriqueCartes.creerEcureuil());
+        m_collection.add(FabriqueCartes.creerLoup());      // 4e carte piochée
+        m_collection.add(FabriqueCartes.creerEcureuil()); // 3e carte piochée
+        m_collection.add(FabriqueCartes.creerEcureuil()); // 2e carte piochée
+        m_collection.add(FabriqueCartes.creerEcureuil()); // 1re carte piochée
 
         resetForNewPartie();
     }
@@ -80,6 +85,16 @@ public class JoueurLogic {
         for (int i = 0; i < 4; i++) {
             piocherCartePrincipal();
         }
+    }
+
+    /**
+     * Réinitialisation légère entre deux parties :
+     * on conserve la main et la pioche du joueur (elles persistent entre les parties),
+     * on remet juste les ressources de combat (os et sang) à zéro.
+     */
+    public void resetRessourcesPourNouvellePartie() {
+        this.m_reserveOs = 0;
+        this.m_reserveSang = 0;
     }
 
     public void ajouterCarteACollection(CarteAnimalLogic carte) {
