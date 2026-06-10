@@ -13,12 +13,12 @@ package inscryption {
             - m_pointsVieMax : Integer
             - m_pointsVieActuels : Integer
             - m_pointsAttaque : Integer
-            # m_pouvoirs : List<Pouvoir>
+            # m_pouvoirs : Pouvoir[*]
             + <<Create>> CarteLogic(nom : String, pv : Integer, att : Integer)
             + {abstract} attaquer(caseEnFace : Emplacement) : Integer
-            + getPouvoirs() : List<Pouvoir>
+            + getPouvoirs() : Pouvoir[*]
             + ajouterPouvoir(pouvoir : Pouvoir)
-            + retirerPouvoirs() : List<Pouvoir>
+            + retirerPouvoirs() : Pouvoir[*]
             + getNom() : String
             + getPointsVieMax() : Integer
             + getPointsVieActuels() : Integer
@@ -60,7 +60,7 @@ package inscryption {
             + getLignePouvoir() : String
             + executerSacrifice(caseActuelle : Emplacement, joueur : JoueurLogic) : Integer
             + creerCopieFraiche() : CarteAnimalLogic
-            + getPouvoirATransferer() : Pouvoir
+            + getPouvoirATransferer() : Pouvoir[0,1]
         }
 
         class CarteVolanteLogic extends CarteAnimalLogic {
@@ -71,7 +71,7 @@ package inscryption {
         }
 
         interface PlateauAccess <<interface>> {
-            + trouverCaseAdjacente(caseActuelle : Emplacement) : Emplacement
+            + trouverCaseAdjacente(caseActuelle : Emplacement) : Emplacement[0,1]
         }
 
         abstract class Pouvoir <<abstract>> {
@@ -146,7 +146,7 @@ package inscryption {
             + <<Create>> Emplacement(position : Integer)
             + getPosition() : Integer
             + estVide() : Boolean
-            + getCarteContenue() : CarteLogic
+            + getCarteContenue() : CarteLogic[0,1]
             + placerCarte(carte : CarteLogic)
             + liberer()
             + libererSiMorte()
@@ -155,18 +155,18 @@ package inscryption {
         }
 
         class PlateauLogic implements PlateauAccess {
-            - m_casesJoueur : List<Emplacement>
-            - m_casesAdversaire : List<Emplacement>
+            - m_casesJoueur : Emplacement[*]
+            - m_casesAdversaire : Emplacement[*]
             + <<Create>> PlateauLogic()
             + AppliquerEffetsDebutTour(campJoueur : Boolean)
             + appliquerEffetsDebutTourJoueur()
             + appliquerEffetsDebutTourAdversaire()
             + avancerMouvementsJoueur()
             + avancerMouvementsAdversaire()
-            + resoudreAttaques(campJoueur : Boolean) : List<Integer>
-            + trouverCaseAdjacente(caseActuelle : Emplacement) : Emplacement
-            + getCasesJoueur() : List<Emplacement>
-            + getCasesAdversaire() : List<Emplacement>
+            + resoudreAttaques(campJoueur : Boolean) : Integer[*]
+            + trouverCaseAdjacente(caseActuelle : Emplacement) : Emplacement[0,1]
+            + getCasesJoueur() : Emplacement[*]
+            + getCasesAdversaire() : Emplacement[*]
         }
 
         class ScoreLogic {
@@ -176,7 +176,7 @@ package inscryption {
             + ajouterPointsAdversaire(points : Integer)
             + getValeurRelative() : Integer
             + estPartieTerminee() : Boolean
-            + getGagnant() : String[0..1]
+            + getGagnant() : String[0,1]
         }
 
         class JoueurLogic {
@@ -185,16 +185,16 @@ package inscryption {
             - m_nombreCartesMain : Integer
             - m_nombreCartesDeck : Integer
             - m_nombreEcureuils : Integer
-            - m_main : CarteAnimalLogic[]
-            - m_deckPrincipal : CarteAnimalLogic[]
-            - m_pileEcureuils : CarteAnimalLogic[]
-            - m_collection : List<CarteAnimalLogic>
+            - m_main : CarteAnimalLogic[*]
+            - m_deckPrincipal : CarteAnimalLogic[*]
+            - m_pileEcureuils : CarteAnimalLogic[*]
+            - m_collection : CarteAnimalLogic[*]
             + <<Create>> JoueurLogic()
             - initialiserCollectionEtDeck()
             + resetForNewPartie()
             + resetRessourcesPourNouvellePartie()
             + ajouterCarteACollection(carte : CarteAnimalLogic)
-            + getCollection() : List<CarteAnimalLogic>
+            + getCollection() : CarteAnimalLogic[*]
             + ajouterCarteDeck(carte : CarteAnimalLogic)
             + ajouterEcureuil(carte : CarteAnimalLogic)
             + piocherCartePrincipal()
@@ -206,7 +206,7 @@ package inscryption {
             + consommerSang(quantite : Integer)
             + getReserveSang() : Integer
             + resetSang()
-            + getMain() : CarteAnimalLogic[]
+            + getMain() : CarteAnimalLogic[*]
             + getNombreCartesMain() : Integer
             + getNombreCartesDeck() : Integer
             + getNombreEcureuils() : Integer
@@ -216,33 +216,33 @@ package inscryption {
 
         class AdversaireLogic {
             + <<Create>> AdversaireLogic(plan : PlanJeu)
-            + obtenirIntention(tour : Integer) : CarteLogic[]
+            + obtenirIntention(tour : Integer) : CarteLogic[*]
             + jouerTour(tour : Integer, plateau : PlateauLogic)
         }
 
         class PlanJeu {
-            - m_sequencesApparition : CarteLogic[][]
+            - m_sequencesApparition : CarteLogic[*][*]
             + <<Create>> PlanJeu()
             - initialiserPlan()
-            + getCartesPourTour(tour : Integer) : CarteLogic[]
+            + getCartesPourTour(tour : Integer) : CarteLogic[*]
         }
     }
 
     package affichage {
 
         class InterfaceConsole {
-            + afficherEtatJeu(plateau : PlateauLogic, joueur : JoueurLogic, score : ScoreLogic, partie : Integer, tour : Integer, intentions : CarteLogic[])
+            + afficherEtatJeu(plateau : PlateauLogic, joueur : JoueurLogic, score : ScoreLogic, partie : Integer, tour : Integer, intentions : CarteLogic[*])
             + afficherPlateau(plateau : PlateauLogic)
             + afficherMainEtPioche(joueur : JoueurLogic)
             + afficherMain(joueur : JoueurLogic)
-            + afficherMessages(messages : List<String>)
+            + afficherMessages(messages : String[*])
             + afficherMessageSimple(message : String)
             + lireSaisieAvecPrompt(prompt : String) : String
             + lireSaisie() : String
             + demanderChoixPioche() : String
             + demanderChoixDeuxCartes(partie : Integer, option1 : CarteAnimalLogic, option2 : CarteAnimalLogic) : String
-            + demanderCartePlateauASacrifier(cases : List<Emplacement>) : Integer
-            + demanderCarteCibleTransfert(collection : List<CarteAnimalLogic>, nomPouvoir : String) : Integer
+            + demanderCartePlateauASacrifier(cases : Emplacement[*]) : Integer
+            + demanderCarteCibleTransfert(collection : CarteAnimalLogic[*], nomPouvoir : String) : Integer
             + afficherActionsPossibles()
         }
 
@@ -279,7 +279,7 @@ package inscryption {
 
             - choisirNouvelleCarte()
             - pierreDeSacrifice()
-            + {static} main(args : String[])
+            + {static} main(args : String[*])
         }
     }
 }
