@@ -4,9 +4,9 @@ skinparam classFontStyle Bold
 skinparam style strictuml
 hide empty members
 
-package inscryption {
+package Inscryption {
 
-    package logique {
+    package Logique {
 
         abstract class CarteLogic <<abstract>> {
             - m_nom : String
@@ -34,9 +34,7 @@ package inscryption {
             + getLigneAttaque() : String
             + getLignePouvoir() : String
             + executerSacrifice(caseActuelle : Emplacement, joueur : JoueurLogic) : Integer
-            + estAnimal() : Boolean
-            + estVolante() : Boolean
-            + estObstacle() : Boolean
+            + getPouvoirATransferer() : Pouvoir[0,1]
         }
 
         class CarteObstacleLogic extends CarteLogic {
@@ -77,7 +75,8 @@ package inscryption {
             + {abstract} getNom() : String
             + auDebutTour(carte : CarteLogic, caseActuelle : Emplacement)
             + auCalculAttaque(degatsBruts : Integer, attaquant : CarteLogic, cible : CarteLogic) : Integer
-            + apresRecevoirDegats(cible : CarteLogic, attaquant : CarteLogic, degatsRecus : Integer)
+            + apresSubirDegats(cible : CarteLogic, attaquant : CarteLogic, degatsRecus : Integer)
+            + apresInfligerDegats(cible : CarteLogic, attaquant : CarteLogic, degatsRecus : Integer)
             + auSacrifice(carteSacrifiee : CarteLogic) : Boolean
             + setPlateau(plateau : PlateauAccess)
             + auMouvement(carte : CarteLogic, caseActuelle : Emplacement)
@@ -106,16 +105,12 @@ package inscryption {
 
         class ContactMortel extends Pouvoir {
             + getNom() : String
-            + apresRecevoirDegats(cible : CarteLogic, attaquant : CarteLogic, degatsRecus : Integer)
+            + apresInfligerDegats(cible : CarteLogic, attaquant : CarteLogic, degatsRecus : Integer)
         }
 
         class PiquePointues extends Pouvoir {
             + getNom() : String
-            + apresRecevoirDegats(cible : CarteLogic, attaquant : CarteLogic, degatsRecus : Integer)
-        }
-
-        class Volant extends Pouvoir {
-            + getNom() : String
+            + apresSubirDegats(cible : CarteLogic, attaquant : CarteLogic, degatsRecus : Integer)
         }
 
         class FabriqueCartes {
@@ -153,7 +148,7 @@ package inscryption {
 
         class PlateauLogic implements PlateauAccess {
             + <<Create>> PlateauLogic()
-            + AppliquerEffetsDebutTour(campJoueur : Boolean)
+            + appliquerEffetsDebutTour(campJoueur : Boolean)
             + appliquerEffetsDebutTourJoueur()
             + appliquerEffetsDebutTourAdversaire()
             + avancerMouvementsJoueur()
@@ -218,7 +213,7 @@ package inscryption {
         }
     }
 
-    package affichage {
+    package Affichage {
 
         class InterfaceConsole {
             + afficherEtatJeu(plateau : PlateauLogic, joueur : JoueurLogic, score : ScoreLogic, partie : Integer, tour : Integer, intentions : CarteLogic[*])
